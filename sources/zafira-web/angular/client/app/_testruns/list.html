@@ -350,6 +350,7 @@
         <div class="col-md-12 no-padding">
             <article class="article">
                 <md-card class="no-margin-h">
+                    <!--<test-run-card test-run="testRun" ng-repeat="testRun in testRuns | orderObjectBy:'startedAt':true track by $index" single-mode="false"></test-run-card>-->
                     <md-table-container>
                         <form ng-submit="search()" name="search_form">
                             <table ng-class="{'lonely-testrun' : currentMode != 'MANY'}" md-table zafira-background-theme="table">
@@ -384,7 +385,7 @@
                                 <md-button type="submit" class="hide">Search</md-button>
                                 </thead>
                                 <tbody md-body>
-                                <tr ng-attr-id="testRun_{{testRun.id}}" md-row ng-repeat-start="testRun in testRuns | orderObjectBy:'startedAt':true track by $index" ng-class="{'background-gray': testRun.selected}" class="result {{testRun.status}}">
+                                    <tr ng-attr-id="testRun_{{testRun.id}}" md-row ng-repeat-start="testRun in testRuns | orderObjectBy:'startedAt':true track by $index" ng-class="{'background-gray': testRun.selected}" class="result {{testRun.status}}">
                                     <td ng-if="currentMode == 'MANY'" name="testRunStatus" md-cell>
                                             <span ng-click="addToSelectedTestRuns(testRun)">
                                         		<md-checkbox name="testRunCheckbox" class="md-primary"

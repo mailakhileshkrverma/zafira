@@ -143,6 +143,42 @@
                             requireLogin: true
                         }
                     })
+                    .state('tests/run2', { //TODO: change state nad url after task is finished
+                        controller: 'TestDetailsController',
+                        controllerAs: '$ctrl',
+                        url: '/tests/runs2/:testRunId',
+                        templateUrl: 'app/containers/test-details/test-details.html',
+                        store: true,
+                        params: {
+                            testRun: null,
+                        },
+                        resolve: {
+                            testRun: ['$stateParams', '$q', '$state', 'TestRunService', ($stateParams, $q, $state, TestRunService) => {
+                                if ($stateParams.testRun) {
+                                    return $q.resolve($stateParams.testRun);
+                                } else if ($stateParams.testRunId) {
+                                    var params = {
+                                        id: $stateParams.testRunId
+                                    };
+
+                                    return TestRunService.searchTestRuns(params)
+                                    .then(function(response) {
+                                        if (response.success && response.data.results && response.data.results[0]) {
+                                            return response.data.results[0];
+                                        } else {
+                                            return $q.reject({message: 'Can\'t get test run with ID=' + $stateParams.testRunId});
+                                        }
+                                    })
+                                    .catch(function(error) {
+                                        console.log(error); //TODO: show toaster notification
+                                        $state.go('tests/runs');
+                                    });
+                                } else {
+                                    $state.go('tests/runs');
+                                }
+                            }],
+                        }
+                    })
                     .state('tests/run', {
 	                    url: '/tests/runs/:id',
 	                    templateUrl: 'app/_testruns/list.html',
@@ -157,6 +193,44 @@
                         store: true,
                         data: {
                             requireLogin: true
+                        }
+                    })
+                    .state('tests/runs2', {
+                        url: '/tests/runs2',
+                        templateUrl: 'app/containers/tests-runs/tests-runs.html',
+                        controller: 'TestsRunsController',
+                        controllerAs: '$ctrl',
+                        bindToController: true,
+                        data: {
+                            requireLogin: true,
+                            classes: 'p-tests-runs'
+                        },
+                        resolve: {
+                            resolvedTestRuns: ['$stateParams', '$q', '$state', 'testsRunsService', ($stateParams, $q, $state, testsRunsService) => {
+                                // if ($stateParams.testRun) {
+                                //     return $q.resolve($stateParams.testRun);
+                                // } else if ($stateParams.testRunId) {
+                                //     var params = {
+                                //         id: $stateParams.testRunId
+                                //     };
+                                //
+                                //     return TestRunService.searchTestRuns(params)
+                                //     .then(function(response) {
+                                //         if (response.success && response.data.results && response.data.results[0]) {
+                                //             return response.data.results[0];
+                                //         } else {
+                                //             return $q.reject({message: 'Can\'t get test run with ID=' + $stateParams.testRunId});
+                                //         }
+                                //     })
+                                //     .catch(function(error) {
+                                //         console.log(error); //TODO: show toaster notification
+                                //         $state.go('tests/runs');
+                                //     });
+                                // } else {
+                                //     $state.go('tests/runs');
+                                // }
+                                return testsRunsService.fetchTestRuns();
+                            }],
                         }
                     })
                     .state('tests/runs/info', {

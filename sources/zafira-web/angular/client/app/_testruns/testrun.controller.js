@@ -13,7 +13,7 @@
 
         var VALUES_TO_STORE = ["predicate", "reverse", "fastSearch", "testRunId", "testRuns", "totalResults", "selectedTestRuns", "searchFormIsEmpty", "showRealTimeEvents", "projects", "showReset", "selectAll", "sc", "currentCriteria", "currentOperator", "currentValue", "subjectBuilder", "filters", "filter", "selectedFilterRange", "rabbitmq", "jira", "jenkins", "currentMode", "testRunInDebugMode", "debugHost", "debugPort", "selectedRange", "slackChannels", "isSlackAvailable", "filterBlockExpand", "collapseFilter", "testGroupDataToStore", "testGroups", "testGroupMode", "tr", "testsTagsOptions", "testsStatusesOptions"];
 
-    	const TENANT = $rootScope.globals.auth.tenant;
+    	const TENANT = $rootScope.globals.auth && $rootScope.globals.auth.tenant;
     	
         $scope.predicate = 'startTime';
         $scope.reverse = false;
@@ -578,8 +578,7 @@
            alertify.warning(messageText);
        };
 
-        $scope.batchRerun = function()
-        {
+        $scope.batchRerun = function() {
         		$scope.selectAll = false;
             var 	rerunFailures = confirm('Would you like to rerun only failures, otherwise all the tests will be restarted?');
 	        	for(var id in $scope.testRuns)
@@ -591,8 +590,7 @@
 	    		}
         };
 
-        $scope.batchDelete = function()
-        {
+        $scope.batchDelete = function() {
             $scope.selectAll = false;
             var results = [];
             var errors = [];
@@ -669,8 +667,7 @@
              });
         };
 
-        $scope.batchEmail = function(event)
-        {
+        $scope.batchEmail = function(event) {
         		$scope.selectAll = false;
         		var testRuns = [];
 	        	for(var id in $scope.testRuns)
@@ -684,7 +681,6 @@
         };
 
         $scope.addTestRun = function (testRun) {
-
             if($scope.testRunId) {
                 $scope.tr= testRun;
             }
@@ -731,7 +727,7 @@
                     $scope.sc.date = selectedRange.dateStart;
                 }
             }
-        };
+        }
 
         function fillFastSearchSc() {
             angular.forEach($scope.fastSearch, function (val, model) {
@@ -752,17 +748,18 @@
 
         function switchMode(index) {
             $scope.currentMode = MODES[index];
-            switch($scope.currentMode) {
-                case 'ONE':
-                    break;
-                case 'MANY':
-                    break;
-                default:
-                    break;
-            }
+            // switch($scope.currentMode) {
+            //     case 'ONE':
+            //         break;
+            //     case 'MANY':
+            //         break;
+            //     default:
+            //         break;
+            // }
         };
 
         $scope.search = function (page, pageSize) {
+            console.log('search running');
             return $q(function (resolve, reject) {
                 $scope.sc.date = null;
                 $scope.sc.toDate = null;
@@ -780,21 +777,26 @@
                 if ($scope.testRunId) {
                     $scope.sc.id = $scope.testRunId;
                     switchMode(0);
-                }
-                else {
-                    $scope.sc = ProjectProvider.initProjects($scope.sc);
+                } else {
+                    $scope.sc = ProjectProvider.initProjects($scope.sc); //TODO: ?
                 }
 
+                //TODO: what's this?
                 fillFastSearchSc();
 
                 fillDateSc($scope.selectedRange);
 
                 var filterQuery = $scope.selectedFilterId ? '?filterId=' + $scope.selectedFilterId : undefined;
 
+                console.log($scope.sc);
+
                 TestRunService.searchTestRuns($scope.sc, filterQuery).then(function(rs) {
                     if(rs.success)
                     {
                         var data = rs.data;
+
+                        console.log($scope.sc);
+                        console.log(Object.assign({}, data.results[0]));
 
                         $scope.sr = rs.data;
 

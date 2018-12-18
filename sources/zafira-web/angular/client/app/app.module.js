@@ -13,12 +13,15 @@
         ,'app.testcase'
         ,'app.testrun'
         ,'app.testruninfo'
+        ,'app.testsRuns'
+        ,'app.testDetails'
         ,'app.view'
         ,'app.settings'
         ,'app.monitors'
         ,'app.integrations'
         ,'app.certification'
         ,'app.sidebar'
+        ,'app.testRunCard'
         // 3rd party feature modules
         ,'ngImgCrop'
         ,'ngecharts'
@@ -1027,7 +1030,28 @@
                 });
             }
         };
-    }]).filter('orderObjectBy', ['$sce', function($sce) {
+    }])
+    .directive('windowWidth', function ($window, windowWidthService) {
+        "use strict";
+
+        return {
+            restrict: 'A',
+            link: function($scope) {
+                angular.element($window).on('resize', function() {
+                    windowWidthService.windowWidth = $window.innerWidth;
+                    windowWidthService.windowHeight = $window.innerHeight;
+
+                    $scope.$digest();
+
+                    $scope.$emit('resize.getWindowSize', {
+                        innerWidth: windowWidthService.windowWidth,
+                        innerHeight: windowWidthService.windowHeight
+                    });
+                });
+            }
+        };
+    })
+    .filter('orderObjectBy', ['$sce', function($sce) {
         var STATUSES_ORDER = {
             'PASSED': 0,
             'FAILED': 1,
