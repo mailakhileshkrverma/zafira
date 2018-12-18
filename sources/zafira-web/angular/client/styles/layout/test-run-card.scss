@@ -7,6 +7,7 @@ $breakpoint-tablet: 1024px;
 
 
 .test-run-card {
+    background-color: #edeff1;
     .p-test-details & {
         padding: 5px 20px;
         position: fixed;
@@ -18,11 +19,14 @@ $breakpoint-tablet: 1024px;
         box-shadow: 0 4px 8px 0 rgba(4, 0, 0, 0.2);
     }
     &__wrapper {
+        position: relative;
         background-color: #fff;
         border-left: 4px solid #777;
         min-height: 55px;
         display: flex;
-
+        @media(min-width: 600px) and (max-width: 860px){
+            flex-direction: column;
+        }
         &.PASSED {
             border-left-color: #8BC34A;
         }
@@ -33,6 +37,23 @@ $breakpoint-tablet: 1024px;
 
         &.IN_PROGRESS {
             border-left-color: #00BCD4;
+        }
+    }
+    .wrapper{ 
+        display: flex;
+    }
+    .wrapper:nth-child(1) {
+        width: 40%;
+        position: relative;
+        @media(min-width: 600px) and (max-width: 860px){
+            width: 100%;
+        }
+    }
+    .wrapper:nth-child(2) {
+        width: 60%;
+        position: relative;
+        @media(min-width: 600px) and (max-width: 860px){
+            width: 100%;
         }
     }
 
@@ -65,11 +86,13 @@ $breakpoint-tablet: 1024px;
             min-width: 200px;
         }
         &._env {
+            flex-grow: 2;
             width: 11%;
             min-width: 100px;
             //width: 150px;
         }
         &._platform {
+            flex-grow: 2;
             width: 9%;
             min-width: 40px;
             flex-wrap: wrap;
@@ -78,8 +101,8 @@ $breakpoint-tablet: 1024px;
         &._env,
         &._platform {
             .label {
-                color: $coal;
-                background-color: $fog-gray;
+                color: $dark-coal-new;
+                background-color: $gray-bg-light-new;
                 display: inline-block;
                 vertical-align: middle;
                 font-size: 10px;
@@ -94,6 +117,7 @@ $breakpoint-tablet: 1024px;
             }
         }
         &._date {
+            flex-grow: 2;
             flex-direction: column;
             align-items: flex-start;
             justify-content: center;
@@ -101,6 +125,7 @@ $breakpoint-tablet: 1024px;
             min-width: 100px;
         }
         &._statistics {
+            flex-grow: 2;
             width: 15%;
             min-width: 170px;
             .label {
@@ -112,6 +137,42 @@ $breakpoint-tablet: 1024px;
                 justify-content: center;
                 align-items: center;
                 text-align: center;
+            }
+            .label-success-border{
+                border: 1px solid $green-new;
+            }
+            .label-success-empty {
+                color: $green-new;
+            }
+            .label-success {
+                background-color: $green-new;
+            }
+            .label-danger-border{
+                border: 1px solid $red-new;
+            }
+            .label-danger-empty {
+                color: $red-new;
+            }
+            .label-danger {
+                background-color: $red-new;
+            }
+            .label-warning-border{
+                border: 1px solid $yellow-new;
+            }
+            .label-warning-empty {
+                color: $yellow-new;
+            }
+            .label-warning {
+                background-color: $yellow-new;
+            }
+            .label-aborted-border{
+                border: 1px solid $gray-new;
+            }
+            .label-aborted-empty {
+                color: $gray-new;
+            }
+            .label-aborted-bg {
+                background-color: $gray-new;
             }
             .label + .label {
                 margin-left: 2px;
@@ -149,8 +210,9 @@ $breakpoint-tablet: 1024px;
     }
 
     &__title {
-        font-weight: 700;
-        line-height: 18px; //TODO: clarify font-size and line-height
+        font-weight: 500;
+        font-size: 14px;
+        line-height: normal; 
         &-wrapper {
             display: flex;
         }
@@ -167,6 +229,7 @@ $breakpoint-tablet: 1024px;
         display: flex;
         flex-wrap: wrap;
         &-name {
+            font-size: 14px;
             margin-right: 5px;
         }
         &-file {
@@ -195,7 +258,7 @@ $breakpoint-tablet: 1024px;
             white-space: nowrap;
             font-size: 12px;
             font-weight: 500;
-            color: rgba(0, 0, 0, .25);
+            color: rgba(0, 0, 0, .5);
             //opacity: .5;
         }
     }
