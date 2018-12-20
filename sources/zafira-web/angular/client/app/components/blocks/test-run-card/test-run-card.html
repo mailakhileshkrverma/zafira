@@ -33,7 +33,9 @@
                         <md-button aria-label="Show or hide tests" ng-click="switchTestRunExpand($ctrl.testRun)"
                             md-ink-ripple="false" class="md-icon-button no-padding expand-button">
                             <i class="fa expand-icon" ng-class="$ctrl.testRun.expand ? 'fa-angle-double-up' : 'fa-angle-double-down'"
-                                aria-hidden="true"></i>
+                                aria-hidden="true">
+                                <img src="../../assets/images/outline-arrow_drop_down_circle-24px.svg" />
+                            </i>
                         </md-button>
                     </div>
                     <div class="test-run-card__title-additions">
@@ -208,7 +210,9 @@
                 <md-button aria-label="Show or hide tests" ng-click="switchTestRunExpand($ctrl.testRun)" md-ink-ripple="false"
                     class="md-icon-button no-padding expand-button">
                     <i class="fa expand-icon" ng-class="$ctrl.testRun.expand ? 'fa-angle-double-up' : 'fa-angle-double-down'"
-                        aria-hidden="true"></i>
+                        aria-hidden="true">
+                        <img src="../../assets/images/outline-arrow_drop_down_circle-24px.svg" />
+                    </i>
                 </md-button>
                 <md-menu md-offset="0 {{currentOffset}}">
                     <md-button name="testRunSetting" aria-label="User settings" class="md-icon-button" data-ng-click="setOffset($event); initMenuRights($ctrl.testRun); $mdMenu.open($event);">

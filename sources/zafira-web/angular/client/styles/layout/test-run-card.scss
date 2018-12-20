@@ -7,7 +7,6 @@ $breakpoint-tablet: 1024px;
 
 
 .test-run-card {
-    background-color: #edeff1;
     .p-test-details & {
         padding: 5px 20px;
         position: fixed;
@@ -56,7 +55,23 @@ $breakpoint-tablet: 1024px;
             width: 100%;
         }
     }
-
+    .expand-button {
+        width: 20px !important;
+        height: 20px !important;
+        margin: 0 5px;
+        left: 0;
+        .fa-angle-double-down {
+            background-color: $gray-bg-light-new;
+            &, & img {
+                width: 100%;
+                height: 100%;
+            }
+            &:before {
+                content: ""
+            }
+        }
+    }
+    
     &__cell {
         display: flex;
         align-items: center;
@@ -213,8 +228,11 @@ $breakpoint-tablet: 1024px;
         font-weight: 500;
         font-size: 14px;
         line-height: normal; 
+        display: flex;
+        align-items: end;
         &-wrapper {
             display: flex;
+            align-items: center;
         }
         &-additions {
             display: flex;
@@ -489,6 +507,21 @@ $breakpoint-tablet: 1024px;
         &__cell {
             &._info {
                 padding-left: 0;
+            }
+        }
+    }
+}
+.p-tests-runs {
+    @media screen and (max-width: $breakpoint-mobile) {
+        &__section {
+            md-card {
+                background: none;
+            }
+        }
+        & .page{
+            padding: 15px 0;
+            & md-card {
+                margin-bottom: 0;
             }
         }
     }
