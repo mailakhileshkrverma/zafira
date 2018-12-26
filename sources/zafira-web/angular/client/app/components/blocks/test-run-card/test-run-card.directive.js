@@ -8,15 +8,25 @@
                 var vm = {
                     testRun: null,
                     singleMode: false, //TODO make different templates?
+                    singleWholeInfo: true,
                     mobileBreakpoint: mediaBreakpoints.mobile || 0,
-                    windowWidthService: windowWidthService
+                    windowWidthService: windowWidthService,
+                    showSingleVersion: function(){
+                        // if(vm.singleMode) {
+                        if(true){
+                            var card = angular.element('.test-run-card');
+                            vm.singleWholeInfo?card.addClass('_short-info').removeClass('_whole-info'):card.removeClass('_short-info').addClass('_whole-info');
+                            vm.singleWholeInfo?vm.singleWholeInfo = false: vm.singleWholeInfo = true;
+                            console.log(vm.singleWholeInfo)
+                        }
+                    }
                 };
-
                 return vm;
             },
             scope: {
                 singleMode: '=',
-                testRun: '='
+                testRun: '=',
+                
             },
             controllerAs: '$ctrl',
             restrict: 'E',

@@ -406,6 +406,9 @@
             border-top: 0;
             min-width: auto;
             padding: 0;
+            & .clear {
+                display: none;
+            }
             &._selection {
                 min-width: auto;
                 md-checkbox {
@@ -502,6 +505,60 @@
         &__cell {
             &._info {
                 padding-left: 0;
+            }
+        }
+    }
+    &._mobile._short-info & {
+        &__row {
+            & .md-menu {
+                position: absolute;
+                bottom: 5px;
+            }
+            &._app-file,
+            &._data,
+            &._tags {
+                display: none;
+            }
+            &._middle {
+                border-top: none;
+                padding-top: 0;
+            }
+        }
+    }
+    &._mobile._whole-info & {
+        &__wrapper {
+            display: flex;
+            justify-content: space-between;
+            flex-direction: row-reverse;
+        }
+        &__row {
+            &._middle {
+                border-top: none;
+                padding-top: 0;
+            }
+            &._top {
+                padding-top: 5px;
+            }
+            & .md-menu {
+                display: none;
+            }
+            &._bottom {
+                display: none;
+            }
+        }
+        &__cell {
+            & .md-icon-button {
+                border-radius: 0;
+            }
+            & .clear {
+                display: block;
+            }
+            .expand-icon {
+                display:none;
+            }
+            &._selection,
+            &._info {
+                display: none;
             }
         }
     }

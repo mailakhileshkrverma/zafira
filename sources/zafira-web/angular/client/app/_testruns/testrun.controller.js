@@ -224,7 +224,7 @@
                 }
             })
         };
-
+        
         $scope.addChip = function () {
             $scope.filter.subject.criterias.push({
                 name: $scope.currentCriteria.value.name,
