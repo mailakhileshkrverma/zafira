@@ -14,6 +14,7 @@
             fetchTestRuns: fetchTestRuns,
             addBrowserVersion: addBrowserVersion,
             addJob: addJob,
+            getLastSearchParams: getLastSearchParams,
         };
 
         function fetchTestRuns(params, filters) {//TODO: return saved data (check conditions before) and implement force for fetching

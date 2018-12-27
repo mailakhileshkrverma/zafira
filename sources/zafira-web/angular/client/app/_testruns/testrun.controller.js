@@ -1682,7 +1682,9 @@
             $scope.sc = angular.copy(DEFAULT_SC);
             $scope.fastSearch = angular.copy(FAST_SEARCH_TEMPLATE);
             delete $scope.selectedFilterId;
+            console.log(angular.copy($location.search()));
             $location.search({});
+            console.log(angular.copy($location.search()));
             $scope.search();
             if($scope.chipsCtrl)
                 delete $scope.chipsCtrl.selectedChip;
