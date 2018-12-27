@@ -30,7 +30,7 @@
                     <div class="test-run-card__title">
                         {{$ctrl.testRun.testSuite.name}}
                         <md-tooltip md-direction="right">{{$ctrl.testRun.testSuite.fileName}}</md-tooltip>
-                        <md-button aria-label="Show or hide tests" ng-click="$ctrl.cons"
+                        <md-button aria-label="Show or hide tests" ng-click="switchTestRunExpand($ctrl.testRun)"
                             md-ink-ripple="false" class="md-icon-button no-padding expand-button">
                             <i class="fa expand-icon" ng-class="$ctrl.testRun.expand ? 'fa-angle-double-up' : 'fa-angle-double-down'"
                                 aria-hidden="true">
@@ -207,7 +207,7 @@
                 </div>
             </div>
             <div name="testRunInfo" class="test-run-card__cell _actions">
-                <md-button aria-label="Show or hide tests" ng-click="$ctrl.showSingleVersion()" md-ink-ripple="false"
+                <md-button aria-label="Show or hide tests"  ng-click="$ctrl.showSingleVersion()" md-ink-ripple="false"
                     class="md-icon-button no-padding expand-button">
                     <i class="fa expand-icon" ng-class="$ctrl.testRun.expand ? 'fa-angle-double-up' : 'fa-angle-double-down'"
                         aria-hidden="true">

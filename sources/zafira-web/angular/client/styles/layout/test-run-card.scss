@@ -224,7 +224,7 @@
         font-size: 14px;
         line-height: normal; 
         display: flex;
-        align-items: end;
+        align-items: center;
         &-wrapper {
             display: flex;
             align-items: center;
@@ -532,12 +532,15 @@
             flex-direction: row-reverse;
         }
         &__row {
+            max-width: 85vw;
+            width: 85vw;
             &._middle {
                 border-top: none;
                 padding-top: 0;
             }
             &._top {
                 padding-top: 5px;
+                width: 20px;
             }
             & .md-menu {
                 display: none;
