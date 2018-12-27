@@ -22,6 +22,7 @@
         ,'app.certification'
         ,'app.sidebar'
         ,'app.testRunCard'
+        ,'app.testsRunsFilter'
         // 3rd party feature modules
         ,'ngImgCrop'
         ,'ngecharts'

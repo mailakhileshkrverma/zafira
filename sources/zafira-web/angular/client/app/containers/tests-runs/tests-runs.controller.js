@@ -155,7 +155,6 @@
         };
 
         vm.$onInit = function() {
-            // console.log(vm.testRuns);
             init();
         };
 
@@ -224,9 +223,6 @@
 
         function getMode() {
             const mode = [];
-
-            //TODO: what the meaning?
-            $scope.search_filter;
 
             if (vm.filterBlockExpand && vm.collapseFilter) {
                 if (vm.filter.id) {
