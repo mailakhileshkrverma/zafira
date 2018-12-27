@@ -8,12 +8,12 @@
                 var vm = {
                     testRun: null,
                     singleMode: false,
-                    singleWholeInfo: true,
+                    singleWholeInfo: false,
                     mobileBreakpoint: mediaBreakpoints.mobile || 0,
                     windowWidthService: windowWidthService,
 
                     addToSelectedtestRuns: addToSelectedtestRuns,
-                    showSingleVersion: showSingleVersion,
+                    showDetails: showDetails,
                 };
 
                 return vm;
@@ -23,14 +23,8 @@
                     vm.onSelect && vm.onSelect(vm.testRun);
                 }
 
-                function showSingleVersion() {
-                    // if(vm.singleMode) { //TODO: fix this after clarification
-                    if (true) {
-                        var card = angular.element('.test-run-card');
-                        vm.singleWholeInfo?card.addClass('_short-info').removeClass('_whole-info'):card.removeClass('_short-info').addClass('_whole-info');
-                        vm.singleWholeInfo?vm.singleWholeInfo = false: vm.singleWholeInfo = true;
-                        console.log(vm.singleWholeInfo)
-                    }
+                function showDetails() {
+                    vm.singleWholeInfo = !vm.singleWholeInfo;
                 }
             },
             scope: {

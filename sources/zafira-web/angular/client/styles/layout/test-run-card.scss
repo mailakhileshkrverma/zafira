@@ -352,7 +352,7 @@
                 padding: 16px 12px 5px;
                 opacity: 0;
                 pointer-events: none;
-                z-index: 1;
+                transition: opacity .25 ease-in-out;
             }
             &._app-file {
                 padding-right: 30px;
@@ -495,6 +495,9 @@
     }
 
     &._mobile._single & {
+        &__wrapper {
+            height: auto;
+        }
         &__row {
             &._app-file,
             &._data,
@@ -508,63 +511,73 @@
             }
         }
     }
-    &._mobile._short-info & {
+
+    &._mobile._single._details & {
         &__row {
-            & .md-menu {
-                position: absolute;
-                bottom: 5px;
-            }
-            &._app-file,
-            &._data,
-            &._tags {
-                display: none;
-            }
             &._middle {
-                border-top: none;
-                padding-top: 0;
+                opacity: 1;
+                pointer-events: all;
+                z-index: 1;
             }
         }
     }
-    &._mobile._whole-info & {
-        &__wrapper {
-            display: flex;
-            justify-content: space-between;
-            flex-direction: row-reverse;
-        }
-        &__row {
-            max-width: 85vw;
-            width: 85vw;
-            &._middle {
-                border-top: none;
-                padding-top: 0;
-            }
-            &._top {
-                padding-top: 5px;
-                width: 20px;
-            }
-            & .md-menu {
-                display: none;
-            }
-            &._bottom {
-                display: none;
-            }
-        }
-        &__cell {
-            & .md-icon-button {
-                border-radius: 0;
-            }
-            & .clear {
-                display: block;
-            }
-            .expand-icon {
-                display:none;
-            }
-            &._selection,
-            &._info {
-                display: none;
-            }
-        }
-    }
+    //&._mobile._short-info & {
+    //    &__row {
+    //        & .md-menu {
+    //            position: absolute;
+    //            bottom: 5px;
+    //        }
+    //        &._app-file,
+    //        &._data,
+    //        &._tags {
+    //            display: none;
+    //        }
+    //        &._middle {
+    //            border-top: none;
+    //            padding-top: 0;
+    //        }
+    //    }
+    //}
+    //&._mobile._whole-info & {
+    //    &__wrapper {
+    //        display: flex;
+    //        justify-content: space-between;
+    //        flex-direction: row-reverse;
+    //    }
+    //    &__row {
+    //        max-width: 85vw;
+    //        width: 85vw;
+    //        &._middle {
+    //            border-top: none;
+    //            padding-top: 0;
+    //        }
+    //        &._top {
+    //            padding-top: 5px;
+    //            width: 20px;
+    //        }
+    //        & .md-menu {
+    //            display: none;
+    //        }
+    //        &._bottom {
+    //            display: none;
+    //        }
+    //    }
+    //    &__cell {
+    //        & .md-icon-button {
+    //            border-radius: 0;
+    //        }
+    //        & .clear {
+    //            display: block;
+    //        }
+    //        .expand-icon {
+    //            display:none;
+    //        }
+    //        &._selection,
+    //        &._info {
+    //            display: none;
+    //        }
+    //    }
+    //}
 }
 .p-tests-runs {
     @media screen and (max-width: $breakpoint-mobile) {

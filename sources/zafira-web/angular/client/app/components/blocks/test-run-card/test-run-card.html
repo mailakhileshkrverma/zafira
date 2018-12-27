@@ -1,6 +1,7 @@
 <div class="test-run-card" ng-class="{
             '_single': $ctrl.singleMode,
-            '_mobile': $ctrl.windowWidthService.windowWidth <= $ctrl.mobileBreakpoint
+            '_mobile': $ctrl.windowWidthService.windowWidth <= $ctrl.mobileBreakpoint,
+            '_details': $ctrl.singleWholeInfo
         }">
     <div 
         ng-attr-id="testRun_{{$ctrl.testRun.id}}" 
@@ -207,7 +208,7 @@
                 </div>
             </div>
             <div name="testRunInfo" class="test-run-card__cell _actions">
-                <md-button aria-label="Show or hide tests"  ng-click="$ctrl.showSingleVersion()" md-ink-ripple="false"
+                <md-button aria-label="Show or hide tests" ng-click="$ctrl.showDetails()" md-ink-ripple="false"
                     class="md-icon-button no-padding expand-button">
                     <i class="fa expand-icon" ng-class="$ctrl.testRun.expand ? 'fa-angle-double-up' : 'fa-angle-double-down'"
                         aria-hidden="true">
