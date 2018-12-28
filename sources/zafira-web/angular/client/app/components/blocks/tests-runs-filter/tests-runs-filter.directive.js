@@ -15,20 +15,161 @@
         };
     });
 
-    function TestsRunsFilterController(FilterService, DEFAULT_SC) {
+    function TestsRunsFilterController(FilterService, DEFAULT_SC, TestRunService, $q, ProjectService,
+                                       testsRunsService) {
+        const subjectName = 'TEST_RUN';
         const FAST_SEARCH_TEMPLATE = {currentModel: 'testSuite'};
+        const DEFAULT_FILTER_VALUE = {
+            subject: {
+                name: subjectName,
+                criterias: [],
+                publicAccess: false
+            }
+        };
+        const CURRENT_CRITERIA = {
+            name: 'CRITERIA',
+            value: null,
+            type: []
+        };
+        const CURRENT_OPERATOR = {
+            name: 'OPERATOR',
+            value: null,
+            type: []
+        };
+        const CURRENT_VALUE = {
+            name: 'VALUE',
+            value: null
+        };
+        const SELECT_CRITERIAS = ['ENV', 'PLATFORM', 'PROJECT', 'STATUS'];
+        const STATUSES = ['PASSED', 'FAILED', 'SKIPPED', 'ABORTED', 'IN_PROGRESS', 'QUEUED', 'UNKNOWN'];
         const vm = {
+            addFilterExpanded: false,
+            currentCriteria: angular.copy(CURRENT_CRITERIA),
+            currentOperator: angular.copy(CURRENT_OPERATOR),
+            currentValue: angular.copy(CURRENT_VALUE),
+            filter: angular.copy(DEFAULT_FILTER_VALUE),
+            filters: [],
             filterBlockExpand: false,
+            fastSearchBlockExpand: false,
             collapseFilter: false,
             selectedFilterId: null,
             searchFormIsEmpty: true,
+            searchParams: testsRunsService.getLastSearchParams(),
+            statuses: STATUSES,
 
             matchMode: matchMode,
             reset: reset,
             createFilter: createFilter,
+            updateFilter: updateFilter,
+            deleteFilter: deleteFilter,
+            clearAndOpenFilterBlock: clearAndOpenFilterBlock,
+            searchByFilter: searchByFilter,
         };
 
+        vm.$onInit = init;
+
         return vm;
+
+        function init() {
+            vm.filterBlockExpand = true;
+            vm.fastSearchBlockExpand = true;
+            loadFilters();
+            loadPublicFilters();
+        }
+
+        function loadFilters() {
+            const loadFilterDataPromises = [];
+
+            loadFilterDataPromises.push(loadEnvironments());
+            loadFilterDataPromises.push(loadPlatforms());
+            loadFilterDataPromises.push(loadProjects());
+
+            return $q.all(loadFilterDataPromises).then(function(values) {
+                loadSubjectBuilder();
+            });
+        }
+
+        function loadPublicFilters() {
+            FilterService.getAllPublicFilters().then(function (rs) {
+                if(rs.success) {
+                    vm.filters = rs.data;
+                }
+            });
+        }
+
+        function loadEnvironments() {
+            return TestRunService.getEnvironments().then(function(rs) {
+                if(rs.success) {
+                    vm.environments = rs.data.filter(function (env) {
+                        return !!env;
+                    });
+
+                    return vm.environments;
+                } else {
+                    alertify.error(rs.message);
+                    $q.reject(rs.message);
+                }
+            });
+        }
+
+        function loadPlatforms() {
+            return TestRunService.getPlatforms().then(function (rs) {
+                if (rs.success) {
+                    vm.platforms = rs.data.filter(function (platform) {
+                        return platform && platform.length;
+                    });
+
+                    return vm.platforms;
+                } else {
+                    alertify.error(rs.message);
+                    $q.reject(rs.message);
+                }
+            });
+        }
+
+        function loadProjects() {
+            return ProjectService.getAllProjects().then(function (rs) {
+                if (rs.success) {
+                    vm.allProjects = rs.data.map(function(proj) {
+                        return proj.name;
+                    });
+
+                    return rs.data;
+                } else {
+                    $q.reject(rs.message);
+                }
+            });
+        }
+
+        function loadSubjectBuilder() {
+            FilterService.getSubjectBuilder(subjectName).then(function (rs) {
+                if(rs.success) {
+                    vm.subjectBuilder = rs.data;
+                    vm.subjectBuilder.criterias.forEach(function(criteria) {
+                        if (isSelectCriteria(criteria)) {
+                            switch(criteria.name) {
+                                case 'ENV':
+                                    criteria.values = vm.environments;
+                                    break;
+                                case 'PLATFORM':
+                                    criteria.values = vm.platforms;
+                                    break;
+                                case 'PROJECT':
+                                    criteria.values = vm.allProjects;
+                                    break;
+                                case 'STATUS':
+                                    criteria.values = STATUSES;
+                                    break;
+                            }
+                        }
+                    });
+                }
+            });
+        }
+
+        function isSelectCriteria(criteria) {
+            return criteria && SELECT_CRITERIAS.indexOf(criteria.name) >= 0;
+        }
 
         function matchMode(modes) {
             const modesData = getMode();
@@ -85,7 +226,62 @@
             });
         }
 
-        function getTestRuns(page, pageSize) { //TODO: copied from containing page -> refactor DRY
+        function updateFilter() {
+            FilterService.updateFilter(vm.filter).then(function (rs) {
+                if (rs.success) {
+                    alertify.success('Filter was updated');
+                    vm.filters[vm.filters.indexOfField('id', rs.data.id)] = rs.data;
+                    clearAndOpenFilterBlock(false);
+                    //TODO: search if filter is applied?
+                } else {
+                    alertify.error(rs.message);
+                }
+            });
+        }
+
+        function clearFilter() {
+            vm.filter = angular.copy(DEFAULT_FILTER_VALUE);
+            clearFilterSlice();
+        }
+
+        function deleteFilter(id) {
+            FilterService.deleteFilter(id).then(function (rs) {
+                if (rs.success) {
+                    alertify.success('Filter was deleted');
+                    vm.filters.splice(vm.filters.indexOfField('id', id), 1);
+                    clearFilter();
+                    vm.collapseFilter = false;
+                } else {
+                    alertify.error(rs.message);
+                }
+            });
+        }
+
+        function chooseFilter(filter) {
+            vm.collapseFilter = true;
+            vm.filter = angular.copy(filter);
+        }
+
+        function clearAndOpenFilterBlock(value) {
+            clearFilter();
+            vm.collapseFilter = value;
+        }
+
+        function clearFilterSlice() {
+            vm.currentCriteria = angular.copy(CURRENT_CRITERIA);
+            vm.currentOperator = angular.copy(CURRENT_OPERATOR);
+            vm.currentValue = angular.copy(CURRENT_VALUE);
+        }
+
+        function searchByFilter(filter, chipsCtrl) {
+            if (vm.selectedFilterId === filter.id) { return; } //TODO: check
+
+            vm.selectedFilterId = filter.id;
+            vm.chipsCtrl = chipsCtrl;
+            getTestRuns();
+        }
+
+        function getTestRuns(page, pageSize) { //TODO: copied from containing page controller -> refactor DRY
             console.log('doing fetching...');
 
             const projects = $cookieStore.get('projects');
