@@ -310,7 +310,7 @@
                     ng-if="$ctrl.testRun.platform || $ctrl.testRun.browserVersion">
                     <span data-ng-if="$ctrl.testRun.platform !== ''" class="platform-icon {{$ctrl.testRun.platform | lowercase}}" />
                     <span data-ng-if="$ctrl.testRun.platform === ''" class="platform-icon unknown"></span>
-                    <span data-ng-if="$ctrl.testRun.browserVersion" class="label label-default">v.70.0{{$ctrl.testRun.browserVersion}}</span>
+                    <span data-ng-if="$ctrl.testRun.browserVersion" class="label label-default">{{$ctrl.testRun.browserVersion}}</span>
                 </div>
             </div>
             <div class="test-run-card__row _data">
