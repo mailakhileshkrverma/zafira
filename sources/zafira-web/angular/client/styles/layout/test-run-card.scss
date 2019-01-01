@@ -384,11 +384,25 @@
     }
 
     /*SINGLE TEST*/
+    &._single {
+        position: sticky;
+        top: 48px;
+        background-color: white;
+        z-index: 2;
+        box-shadow: 0 4px 8px 0 rgba(4, 0, 0, 0.2);
+        @media (min-width: $breakpoint-mobile) {
+            padding: 5px 0;
+        }
+    }
+    
     &._single & {
         &__wrapper {
-            padding: 10px 12px 15px;
             min-height: 45px;
             height: auto;
+            @media (min-width: $breakpoint-mobile) {
+                margin: 0 6px 0 20px;
+                padding: 0 12px;
+            }
         }
         &__row {
             &._middle {
@@ -585,6 +599,7 @@
         &__wrapper {
             height: auto;
             padding: 10px 12px 10px;
+            margin-bottom: 0;
         }
         &__row {
             &._app-file,
@@ -661,6 +676,26 @@
             padding: 15px 0;
             & md-card {
                 margin-bottom: 0;
+            }
+        }
+    }
+}
+
+//the rule for sticky single test
+#content {
+    $content: &;
+    & ._single{
+        @at-root {
+            #{$content} {
+                overflow: visible;
+                & .page {
+                    padding: 0;
+                }
+                & .row {
+                    @media (min-width: $breakpoint-mobile) {
+                        padding: 0 20px;
+                    }
+                }
             }
         }
     }
