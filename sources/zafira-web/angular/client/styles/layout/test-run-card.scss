@@ -422,6 +422,9 @@
         }
         &__cell {
             border-top: 0;
+            &._info {
+                padding: 0;
+            }
             &._selection {
                 display: none;
             }
