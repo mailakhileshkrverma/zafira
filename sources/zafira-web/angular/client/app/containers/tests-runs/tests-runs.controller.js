@@ -196,8 +196,6 @@
         function populateSearchQuery() {
             const searchParams = $location.search();
 
-            console.log(searchParams);
-
             if (searchParams.testSuite) {
                 vm.searchParams.testSuite = searchParams.testSuite;
             }
@@ -306,6 +304,7 @@
         //TODO: what the meaning?
         function fillFastSearchParam(params) {
             angular.forEach(vm.fastSearch, function(val, model) {
+                console.log(val, model);
                 if (model !== 'currentModel') {
                     params[model] = val;
                 }
@@ -508,7 +507,7 @@
         function loadSubjectBuilder() {
             FilterService.getSubjectBuilder(subjectName).then(function (rs) {
                 if(rs.success) {
-                    console.log(rs);
+                    console.log('loadSubjectBuilder', rs);
                     vm.subjectBuilder = rs.data;
                     vm.subjectBuilder.criterias.forEach(function(criteria) {
                         if(isSelectCriteria(criteria)) {

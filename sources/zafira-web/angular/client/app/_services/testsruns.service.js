@@ -6,18 +6,40 @@
         .factory('testsRunsService', ['TestRunService', '$q', '$rootScope', 'UtilService', 'API_URL', testsRunsService]);
 
     function testsRunsService(TestRunService, $q, $rootScope, UtilService, API_URL) {
+        const searchTypes = ['testSuite', 'executionURL', 'appVersion'];
         let _lastResult = [];
         let _lastParams = null;
         let _lastFilters = null;
+        let _activeFilterId = null;
+        let _activeSearchType = searchTypes[0];
+        let _searchParams = {};
 
-        return {
+        return  {
             fetchTestRuns: fetchTestRuns,
             addBrowserVersion: addBrowserVersion,
             addJob: addJob,
             getLastSearchParams: getLastSearchParams,
+            getActiveFilter: getActiveFilter,
+            setActiveFilter: setActiveFilter,
+            resetActiveFilter:resetActiveFilter,
+            isFilterActive: isFilterActive,
+            setActiveSearchType: setActiveSearchType,
+            getActiveSearchType: getActiveSearchType,
+            resetActiveSearchType: resetActiveSearchType,
+            getSearchValue: getSearchValue,
+            getSearchValueByType: getSearchValueByType,
+            setSearchValue: setSearchValue,
+            setActiveSearchValue: setActiveSearchValue,
+            resetSearchValue: resetSearchValue,
+            isSearchActive: isSearchActive,
+            setSearchParam: setSearchParam,
+            getSearchParam: getSearchParam,
+            deleteSearchParam: deleteSearchParam,
         };
 
-        function fetchTestRuns(params, filters) {//TODO: return saved data (check conditions before) and implement force for fetching
+        function fetchTestRuns(params, filter) {//TODO: return saved data (check conditions before) and implement force for fetching
+            console.log(params);
+
             const defaultParams = {
                 date: null,
                 fromDate: null,
@@ -28,13 +50,15 @@
                 projects: null
             };
 
-            params = angular.extend({}, defaultParams, params || {}); //TODO: do we need to remove NULL values?
+            params = angular.extend({}, defaultParams, _searchParams, params || {}); //TODO: do we need to remove NULL values?
+
+            filter = _activeFilterId ? '?filterId=' + _activeFilterId : undefined;
 
             // save search params
             _lastParams = params;
-            _lastFilters = filters;
+            _lastFilters = filter;
 
-            return TestRunService.searchTestRuns(params, filters).
+            return TestRunService.searchTestRuns(params, filter).
                 then(function(rs) {
                     if (rs.success) {
                         const testRuns = rs.data.results;
@@ -47,7 +71,7 @@
 
                         _lastResult = rs.data;
 
-                        console.log(_lastResult);
+                        console.log('TestRunService.searchTestRuns', _lastResult);
                         return $q.resolve(_lastResult);
                     } else {
                         console.error(rs.message);
@@ -83,6 +107,74 @@
                 testRun.jenkinsURL = testRun.job.jobURL + '/' + testRun.buildNumber;
                 testRun.UID = testRun.testSuite.name + ' ' + testRun.jenkinsURL;
             }
+        }
+
+        function setActiveFilter(id) {
+            _activeFilterId = id;
+        }
+
+        function resetActiveFilter() {
+            _activeFilterId = null;
+        }
+
+        function getActiveFilter() {
+            return _activeFilterId;
+        }
+
+        function isFilterActive() {
+            return !!_activeFilterId;
+        }
+
+        function setActiveSearchType(type) {
+            _activeSearchType = type;
+        }
+
+        function getActiveSearchType() {
+            return _activeSearchType;
+        }
+
+        function resetActiveSearchType() {
+            _activeSearchType = searchTypes[0];
+        }
+
+        function setActiveSearchValue(value) {
+            _searchParams[_activeSearchType] = value;
+        }
+
+        function setSearchValue(type, value) {
+            _searchParams[type] = value;
+        }
+
+        function getSearchValue() {
+            return _searchParams[_activeSearchType];
+        }
+
+        function getSearchValueByType(type) {
+            return _searchParams[type];
+        }
+
+        function resetSearchValue() {
+            searchTypes.forEach(function(type) {
+                delete _searchParams[type];
+            });
+        }
+
+        function isSearchActive() {
+            return Object.keys(_searchParams).some(function(key) {
+                return !!_searchParams[key];
+            });
+        }
+
+        function setSearchParam(name, value) {
+            _searchParams[name] = value;
+        }
+
+        function getSearchParam(name) {
+            return _searchParams[name];
+        }
+
+        function deleteSearchParam(name) {
+            delete _searchParams[name];
         }
     }
 })();

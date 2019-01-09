@@ -7,6 +7,7 @@
             templateUrl: 'app/components/blocks/tests-runs-filter/tests-runs-filter.html',
             controller: TestsRunsFilterController,
             scope: {
+                onFilterChange: '&'
             },
             controllerAs: '$ctrl',
             restrict: 'E',
@@ -16,7 +17,7 @@
     });
 
     function TestsRunsFilterController(FilterService, DEFAULT_SC, TestRunService, $q, ProjectService,
-                                       testsRunsService) {
+                                       testsRunsService, $cookieStore, UserService, $timeout) {
         const subjectName = 'TEST_RUN';
         const FAST_SEARCH_TEMPLATE = {currentModel: 'testSuite'};
         const DEFAULT_FILTER_VALUE = {
@@ -52,18 +53,34 @@
             filterBlockExpand: false,
             fastSearchBlockExpand: false,
             collapseFilter: false,
-            selectedFilterId: null,
-            searchFormIsEmpty: true,
+            isFilterSelected: testsRunsService.isFilterActive,
+            searchFormIsActive: testsRunsService.isSearchActive,
             searchParams: testsRunsService.getLastSearchParams(),
             statuses: STATUSES,
+            selectedRange: {
+                selectedTemplate: null,
+                selectedTemplateName: null,
+                dateStart: null,
+                dateEnd: null,
+                showTemplate: false,
+                fullscreen: false
+            },
+            currentUser: UserService.getCurrentUser(),
 
             matchMode: matchMode,
             reset: reset,
+            onApply: onApply,
+            addChip: addChip,
             createFilter: createFilter,
             updateFilter: updateFilter,
             deleteFilter: deleteFilter,
             clearAndOpenFilterBlock: clearAndOpenFilterBlock,
             searchByFilter: searchByFilter,
+            selectFilterForEdit: selectFilterForEdit,
+            selectSearchType: selectSearchType,
+            getActiveSearchType: testsRunsService.getActiveSearchType,
+            onSearchChange: onSearchChange,
+            onChangeSearchCriteria: onChangeSearchCriteria,
         };
 
         vm.$onInit = init;
@@ -192,11 +209,11 @@
                 }
             }
 
-            if (vm.selectedFilterId) {
+            if (testsRunsService.isFilterActive()) {
                 mode.push('APPLY');
             }
 
-            if (!vm.searchFormIsEmpty) {
+            if (vm.searchFormIsActive()) {
                 mode.push('SEARCH');
             }
 
@@ -207,10 +224,21 @@
             vm.selectedRange.dateStart = null;
             vm.selectedRange.dateEnd = null;
             vm.searchParams = angular.copy(DEFAULT_SC);
-            vm.fastSearch = angular.copy(FAST_SEARCH_TEMPLATE);
-            vm.selectedFilterId = null;
-            getTestRuns();
+            // vm.fastSearch = angular.copy(FAST_SEARCH_TEMPLATE);
+            vm.fastSearch = {};
+            testsRunsService.resetActiveSearchType();
+            testsRunsService.resetSearchValue();
+            testsRunsService.resetActiveFilter();
+            // getTestRuns();
+            vm.onFilterChange();
             vm.chipsCtrl && (delete vm.chipsCtrl.selectedChip);
+        }
+
+        function onApply() {
+            $timeout(function() {
+                vm.onFilterChange();
+            }, 0);
+
         }
 
         function createFilter() {
@@ -257,7 +285,7 @@
             });
         }
 
-        function chooseFilter(filter) {
+        function selectFilterForEdit(filter) {
             vm.collapseFilter = true;
             vm.filter = angular.copy(filter);
         }
@@ -274,19 +302,19 @@
         }
 
         function searchByFilter(filter, chipsCtrl) {
-            if (vm.selectedFilterId === filter.id) { return; } //TODO: check
+            //return if click on already selected filter
+            if (testsRunsService.getActiveFilter() === filter.id) { return; }
 
-            vm.selectedFilterId = filter.id;
+            testsRunsService.setActiveFilter(filter.id);
             vm.chipsCtrl = chipsCtrl;
-            getTestRuns();
+            // getTestRuns();
+            vm.onFilterChange();
         }
 
         function getTestRuns(page, pageSize) { //TODO: copied from containing page controller -> refactor DRY
-            console.log('doing fetching...');
+            console.log('2222222doing fetching...');
 
             const projects = $cookieStore.get('projects');
-            const filter = vm.selectedFilterId ? '?filterId=' +
-                vm.selectedFilterId : undefined;
             const params = {
                 date: null,
                 toDate: null,
@@ -319,6 +347,60 @@
                 console.error(err.message);
                 return $q.reject(err);
             });
+        }
+
+        //TODO: what the meaning?
+        function fillFastSearchParam(params) {
+            angular.forEach(vm.fastSearch, function(val, model) {
+                if (model !== 'currentModel') {
+                    params[model] = val;
+                }
+            });
+        }
+
+        function fillDateParam(params) {
+            if (vm.selectedRange.dateStart && vm.selectedRange.dateEnd) {
+                if (vm.selectedRange.dateStart.getTime() !==
+                    vm.selectedRange.dateEnd.getTime()) {
+                    params.fromDate = vm.selectedRange.dateStart;
+                    params.toDate = vm.selectedRange.dateEnd;
+                } else {
+                    params.date = vm.selectedRange.dateStart;
+                }
+            }
+        }
+
+        function addChip() {
+            vm.filter.subject.criterias.push({
+                name: vm.currentCriteria.value.name,
+                operator: vm.currentOperator.value,
+                value: vm.currentValue.value && vm.currentValue.value.value ? vm.currentValue.value.value : vm.currentValue.value
+            });
+            clearFilterSlice();
+        }
+
+        function selectSearchType(type) {
+            if (vm.getActiveSearchType() === type) { return; }
+
+            testsRunsService.setActiveSearchType(type);
+        }
+
+        function onChangeSearchCriteria(name) {
+            if (!name) { return; }
+
+            if (vm.searchParams[name]) {
+                testsRunsService.setSearchParam(name, vm.searchParams[name]);
+            } else {
+                testsRunsService.deleteSearchParam(name);
+            }
+        }
+
+        function onSearchChange() {
+            const activeSearchType = testsRunsService.getActiveSearchType();
+
+            testsRunsService.setSearchParam(activeSearchType, vm.fastSearch[activeSearchType]);
+
+            console.log(testsRunsService.getSearchParam(activeSearchType));
         }
     }
 })();
