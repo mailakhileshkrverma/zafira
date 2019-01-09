@@ -17,7 +17,8 @@
     });
 
     function TestsRunsFilterController(FilterService, DEFAULT_SC, TestRunService, $q, ProjectService,
-                                       testsRunsService, $cookieStore, UserService, $timeout) {
+                                       testsRunsService, $cookieStore, UserService, $timeout,
+                                       $mdDateRangePicker) {
         const subjectName = 'TEST_RUN';
         const FAST_SEARCH_TEMPLATE = {currentModel: 'testSuite'};
         const DEFAULT_FILTER_VALUE = {
@@ -53,8 +54,11 @@
             filterBlockExpand: false,
             fastSearchBlockExpand: false,
             collapseFilter: false,
+            isFilterActive: testsRunsService.isFilterActive,
+            isSearchActive: testsRunsService.isSearchActive,
             isFilterSelected: testsRunsService.isFilterActive,
             searchFormIsActive: testsRunsService.isSearchActive,
+            getActiveFilteringTool: testsRunsService.getActiveFilteringTool,
             searchParams: testsRunsService.getLastSearchParams(),
             statuses: STATUSES,
             selectedRange: {
@@ -68,7 +72,7 @@
             currentUser: UserService.getCurrentUser(),
 
             matchMode: matchMode,
-            reset: reset,
+            onReset: onReset,
             onApply: onApply,
             addChip: addChip,
             createFilter: createFilter,
@@ -81,6 +85,7 @@
             getActiveSearchType: testsRunsService.getActiveSearchType,
             onSearchChange: onSearchChange,
             onChangeSearchCriteria: onChangeSearchCriteria,
+            openDatePicker: openDatePicker,
         };
 
         vm.$onInit = init;
@@ -213,22 +218,20 @@
                 mode.push('APPLY');
             }
 
-            if (vm.searchFormIsActive()) {
+            if (testsRunsService.getActiveFilteringTool() === 'search') {
                 mode.push('SEARCH');
             }
 
             return mode;
         }
 
-        function reset() {
+        function onReset() {
             vm.selectedRange.dateStart = null;
             vm.selectedRange.dateEnd = null;
             vm.searchParams = angular.copy(DEFAULT_SC);
             // vm.fastSearch = angular.copy(FAST_SEARCH_TEMPLATE);
             vm.fastSearch = {};
-            testsRunsService.resetActiveSearchType();
-            testsRunsService.resetSearchValue();
-            testsRunsService.resetActiveFilter();
+            testsRunsService.resetFilteringState();
             // getTestRuns();
             vm.onFilterChange();
             vm.chipsCtrl && (delete vm.chipsCtrl.selectedChip);
@@ -302,9 +305,14 @@
         }
 
         function searchByFilter(filter, chipsCtrl) {
+            const activeFilteringTool = testsRunsService.getActiveFilteringTool();
+
             //return if click on already selected filter
             if (testsRunsService.getActiveFilter() === filter.id) { return; }
+            //return if search tool activated
+            if (activeFilteringTool && activeFilteringTool === 'search') { return; }
 
+            !activeFilteringTool && testsRunsService.setActiveFilteringTool('filter');
             testsRunsService.setActiveFilter(filter.id);
             vm.chipsCtrl = chipsCtrl;
             // getTestRuns();
@@ -386,21 +394,59 @@
         }
 
         function onChangeSearchCriteria(name) {
-            if (!name) { return; }
+            const activeFilteringTool = testsRunsService.getActiveFilteringTool();
 
+            if (!name) { return; }
+            if (activeFilteringTool && activeFilteringTool !== 'search') { return; }
+
+            !activeFilteringTool && testsRunsService.setActiveFilteringTool('search');
             if (vm.searchParams[name]) {
                 testsRunsService.setSearchParam(name, vm.searchParams[name]);
             } else {
-                testsRunsService.deleteSearchParam(name);
+                // testsRunsService.deleteSearchParam(name);
+                testsRunsService.setSearchParam(name, null);
             }
         }
 
         function onSearchChange() {
             const activeSearchType = testsRunsService.getActiveSearchType();
+            const activeFilteringTool = testsRunsService.getActiveFilteringTool();
 
+            if (activeFilteringTool && activeFilteringTool !== 'search') { return; }
+
+            !activeFilteringTool && testsRunsService.setActiveFilteringTool('search');
             testsRunsService.setSearchParam(activeSearchType, vm.fastSearch[activeSearchType]);
+        }
 
-            console.log(testsRunsService.getSearchParam(activeSearchType));
+        function openDatePicker($event, showTemplate) {
+            vm.selectedRange.showTemplate = showTemplate;
+
+            $mdDateRangePicker.show({
+                targetEvent: $event,
+                model: vm.selectedRange
+            })
+            .then(function(result) {
+                if (result) {
+                    vm.selectedRange = result;
+                    const activeFilteringTool = testsRunsService.getActiveFilteringTool();
+
+                    if (activeFilteringTool && activeFilteringTool !== 'search') { return; }
+
+                    !activeFilteringTool && testsRunsService.setActiveFilteringTool('search');
+                    if (vm.selectedRange.dateStart && vm.selectedRange.dateEnd) {
+                        if (vm.selectedRange.dateStart.getTime() !==
+                            vm.selectedRange.dateEnd.getTime()) {
+                            testsRunsService.deleteSearchParam('date');
+                            testsRunsService.setSearchParam('fromDate', vm.selectedRange.dateStart);
+                            testsRunsService.setSearchParam('toDate', vm.selectedRange.dateEnd);
+                        } else {
+                            testsRunsService.deleteSearchParam('fromDate');
+                            testsRunsService.deleteSearchParam('toDate');
+                            testsRunsService.setSearchParam('date', vm.selectedRange.dateStart);
+                        }
+                    }
+                }
+            })
         }
     }
 })();

@@ -91,7 +91,7 @@
             filterBlockExpand: false,
             fastSearchBlockExpand: false,
             addFilterExpanded: false,
-            searchParams: testsRunsService.getLastSearchParams(),
+            // searchParams: testsRunsService.getLastSearchParams(),
             selectedTestRuns: {},
             selectedFilterRange: {
                 selectedTemplate: null,
@@ -158,24 +158,24 @@
             init();
         };
 
-        $scope.$watchGroup([ //TODO: Refactor: use service and session store if need
-            '$ctrl.fastSearch.testSuite',
-            '$ctrl.fastSearch.executionURL',
-            '$ctrl.fastSearch.appVersion',
-            '$ctrl.searchParams.status',
-            '$ctrl.searchParams.environment',
-            '$ctrl.searchParams.platform',
-            '$ctrl.searchParams.reviewed',
-            '$ctrl.selectedRange.dateStart',
-            '$ctrl.selectedRange.dateEnd'], function(fastSearchArray) {
-            const notEmptyValues = fastSearchArray.filter(function(value) {
-                return value && (value.length > 0 ||
-                    Object.prototype.toString.call(value) === '[object Date]' ||
-                    value.$$hashKey || value === true);
-            });
-
-            vm.searchFormIsEmpty = !notEmptyValues.length;
-        });
+        // $scope.$watchGroup([ //TODO: Refactor: use service and session store if need
+        //     '$ctrl.fastSearch.testSuite',
+        //     '$ctrl.fastSearch.executionURL',
+        //     '$ctrl.fastSearch.appVersion',
+        //     '$ctrl.searchParams.status',
+        //     '$ctrl.searchParams.environment',
+        //     '$ctrl.searchParams.platform',
+        //     '$ctrl.searchParams.reviewed',
+        //     '$ctrl.selectedRange.dateStart',
+        //     '$ctrl.selectedRange.dateEnd'], function(fastSearchArray) {
+        //     const notEmptyValues = fastSearchArray.filter(function(value) {
+        //         return value && (value.length > 0 ||
+        //             Object.prototype.toString.call(value) === '[object Date]' ||
+        //             value.$$hashKey || value === true);
+        //     });
+        //
+        //     vm.searchFormIsEmpty = !notEmptyValues.length;
+        // });
 
         return vm;
 
@@ -194,29 +194,29 @@
         }
 
         function populateSearchQuery() {
-            const searchParams = $location.search();
-
-            if (searchParams.testSuite) {
-                vm.searchParams.testSuite = searchParams.testSuite;
-            }
-            if (searchParams.platform) {
-                vm.searchParams.platform = searchParams.platform;
-            }
-            if (searchParams.environment) {
-                vm.searchParams.environment = searchParams.environment;
-            }
-            if (searchParams.page) {
-                vm.searchParams.page = searchParams.page;
-            }
-            if (searchParams.pageSize) {
-                vm.searchParams.pageSize = searchParams.pageSize;
-            }
-            if (searchParams.fromDate) {
-                vm.searchParams.fromDateString = searchParams.fromDate;
-            }
-            if (searchParams.toDate) {
-                vm.searchParams.toDateString = searchParams.toDate;
-            }
+            // const searchParams = $location.search();
+            //
+            // if (searchParams.testSuite) {
+            //     vm.searchParams.testSuite = searchParams.testSuite;
+            // }
+            // if (searchParams.platform) {
+            //     vm.searchParams.platform = searchParams.platform;
+            // }
+            // if (searchParams.environment) {
+            //     vm.searchParams.environment = searchParams.environment;
+            // }
+            // if (searchParams.page) {
+            //     vm.searchParams.page = searchParams.page;
+            // }
+            // if (searchParams.pageSize) {
+            //     vm.searchParams.pageSize = searchParams.pageSize;
+            // }
+            // if (searchParams.fromDate) {
+            //     vm.searchParams.fromDateString = searchParams.fromDate;
+            // }
+            // if (searchParams.toDate) {
+            //     vm.searchParams.toDateString = searchParams.toDate;
+            // }
         }
 
         function getMode() {
@@ -283,7 +283,8 @@
 
             vm.searchParams = Object.assign({}, vm.searchParams, params);
 
-            return testsRunsService.fetchTestRuns(vm.searchParams, filter)
+            // return testsRunsService.fetchTestRuns(vm.searchParams, filter)
+            return testsRunsService.fetchTestRuns()
                 .then(function(rs) { //TODO: Use own service
                     console.log(rs);
 

@@ -3,16 +3,17 @@
 
     angular
         .module('app.services')
-        .factory('testsRunsService', ['TestRunService', '$q', '$rootScope', 'UtilService', 'API_URL', testsRunsService]);
+        .factory('testsRunsService', ['TestRunService', '$q', 'DEFAULT_SC', testsRunsService]);
 
-    function testsRunsService(TestRunService, $q, $rootScope, UtilService, API_URL) {
+    function testsRunsService(TestRunService, $q, DEFAULT_SC) {
         const searchTypes = ['testSuite', 'executionURL', 'appVersion'];
         let _lastResult = [];
         let _lastParams = null;
         let _lastFilters = null;
         let _activeFilterId = null;
         let _activeSearchType = searchTypes[0];
-        let _searchParams = {};
+        let _searchParams = angular.copy(DEFAULT_SC);
+        let _activeFilterinTool = null;
 
         return  {
             fetchTestRuns: fetchTestRuns,
@@ -35,28 +36,33 @@
             setSearchParam: setSearchParam,
             getSearchParam: getSearchParam,
             deleteSearchParam: deleteSearchParam,
+            setActiveFilteringTool: setActiveFilteringTool,
+            getActiveFilteringTool: getActiveFilteringTool,
+            deleteActiveFilteringTool: deleteActiveFilteringTool,
+            resetFilteringState: resetFilteringState,
         };
 
         function fetchTestRuns(params, filter) {//TODO: return saved data (check conditions before) and implement force for fetching
-            console.log(params);
 
-            const defaultParams = {
-                date: null,
-                fromDate: null,
-                toDate: null,
-                page: 1,
-                pageSize: 20,
-                id: null,
-                projects: null
-            };
+            // const defaultParams = {
+            //     date: null,
+            //     fromDate: null,
+            //     toDate: null,
+            //     page: 1,
+            //     pageSize: 20,
+            //     id: null,
+            //     projects: null
+            // };
 
-            params = angular.extend({}, defaultParams, _searchParams, params || {}); //TODO: do we need to remove NULL values?
+            params = angular.extend({}, _searchParams, params || {}); //TODO: do we need to remove NULL values?
 
             filter = _activeFilterId ? '?filterId=' + _activeFilterId : undefined;
 
             // save search params
             _lastParams = params;
             _lastFilters = filter;
+
+            console.log(params);
 
             return TestRunService.searchTestRuns(params, filter).
                 then(function(rs) {
@@ -121,9 +127,9 @@
             return _activeFilterId;
         }
 
-        function isFilterActive() {
-            return !!_activeFilterId;
-        }
+        // function isFilterActive() {
+        //     return !!_activeFilterId;
+        // }
 
         function setActiveSearchType(type) {
             _activeSearchType = type;
@@ -159,11 +165,17 @@
             });
         }
 
-        function isSearchActive() {
-            return Object.keys(_searchParams).some(function(key) {
-                return !!_searchParams[key];
-            });
+        function resetSearchParams() {
+            _searchParams = angular.copy(DEFAULT_SC);
+            _lastParams = null;
+            _lastFilters = null;
         }
+
+        // function isSearchActive() {
+        //     return Object.keys(_searchParams).some(function(key) {
+        //         return !!_searchParams[key];
+        //     });
+        // }
 
         function setSearchParam(name, value) {
             _searchParams[name] = value;
@@ -175,6 +187,33 @@
 
         function deleteSearchParam(name) {
             delete _searchParams[name];
+        }
+
+        function setActiveFilteringTool(tool) {
+            _activeFilterinTool = tool;
+        }
+
+        function getActiveFilteringTool() {
+            return _activeFilterinTool;
+        }
+
+        function deleteActiveFilteringTool() {
+            _activeFilterinTool = null;
+        }
+
+        function isFilterActive() {
+            return _activeFilterinTool === 'filter';
+        }
+
+        function isSearchActive() {
+            return _activeFilterinTool === 'search';
+        }
+
+        function resetFilteringState() {
+            deleteActiveFilteringTool();
+            resetActiveSearchType();
+            resetSearchParams();
+            resetActiveFilter();
         }
     }
 })();
