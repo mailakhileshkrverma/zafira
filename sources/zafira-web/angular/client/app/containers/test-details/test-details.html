@@ -10,23 +10,27 @@
                                     <tr class="test-run-group-row" md-row>
                                         <th md-column class="sort-new test-run-group-column" colspan="4">
                                             <div class="test-run-group">
-                                                <div class="test-run-group_controls-buttons">
-                                                    <button id="plainToggle" ng-class="{'md-primary': $ctrl.testGroupMode === 'PLAIN'}" class="md-button md-raised md-ink-ripple" type="button" ng-click="$ctrl.switchTestGroupMode('PLAIN');">
-                                                        Plain
-                                                    </button>
-                                                    <button id="groupsToggle" ng-class="{'md-primary': $ctrl.testGroupMode === 'GROUPS'}" class="md-button md-raised md-ink-ripple" type="button" ng-click="$ctrl.switchTestGroupMode('GROUPS');">
-                                                        Groups
-                                                    </button>
+                                                <div class="test-run-group_wrapper _left">
+                                                    <div class="test-run-group_controls-buttons">
+                                                        <button id="plainToggle" ng-class="{'md-primary': $ctrl.testGroupMode === 'PLAIN'}" class="md-button md-raised md-ink-ripple" type="button" ng-click="$ctrl.switchTestGroupMode('PLAIN');">
+                                                            Plain
+                                                        </button>
+                                                        <button id="groupsToggle" ng-class="{'md-primary': $ctrl.testGroupMode === 'GROUPS'}" class="md-button md-raised md-ink-ripple" type="button" ng-click="$ctrl.switchTestGroupMode('GROUPS');">
+                                                            Groups
+                                                        </button>
+                                                    </div>
+                                                    <chips-array chips="$ctrl.testRun.tags" options="$ctrl.testsTagsOptions" count-to-show="3" multi="$ctrl.testGroupMode === 'PLAIN'" on-select="$ctrl.onTagSelect($tags);"></chips-array>
                                                 </div>
-                                                <chips-array chips="$ctrl.testRun.tags" options="$ctrl.testsTagsOptions" count-to-show="3" multi="$ctrl.testGroupMode === 'PLAIN'" on-select="$ctrl.onTagSelect($tags);"></chips-array>
-                                                <div class="test-run-group_sorts">
-                                                    <div name="sortElapsed" sort-item="{{$ctrl.testGroups.reverse}}" class="pointer col-sm-2" data-ng-click="$ctrl.testGroups.predicate = 'elapsed'; $ctrl.testGroups.reverse = !$ctrl.testGroups.reverse">Elapsed&nbsp;</div>
-                                                </div>
-                                                <status-buttons on-button-click="$ctrl.onStatusButtonClick($statuses);" options="$ctrl.testsStatusesOptions" multi="true"></status-buttons>
-                                                <div class="test-run-group_other-buttons">
-                                                    <button id="resetAllToggle" class="md-button md-dark md-raised md-ink-ripple" type="button" ng-click="$ctrl.resetTestsGrouping(); $ctrl.reverse = false; $ctrl.predicate = 'startTime';">
-                                                        RESET ALL
-                                                    </button>
+                                                <div class="test-run-group_wrapper _right">
+                                                    <status-buttons on-button-click="$ctrl.onStatusButtonClick($statuses);" options="$ctrl.testsStatusesOptions" multi="true"></status-buttons>
+                                                    <div class="test-run-group_sorts">
+                                                        <div name="sortElapsed" sort-item="{{$ctrl.testGroups.reverse}}" class="pointer col-sm-2" data-ng-click="$ctrl.testGroups.predicate = 'elapsed'; $ctrl.testGroups.reverse = !$ctrl.testGroups.reverse">Elapsed&nbsp;</div>
+                                                    </div>
+                                                    <div class="test-run-group_other-buttons">
+                                                        <button id="resetAllToggle" class="md-button md-ink-ripple" type="button" ng-click="$ctrl.resetTestsGrouping(); $ctrl.reverse = false; $ctrl.predicate = 'startTime';">
+                                                            RESET
+                                                        </button>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </th>
