@@ -1,10 +1,16 @@
 @import "../global/var";
 
+.test-run-group-row.md-row {
+    @media(max-width: 599px) {
+        display: none;
+    }
+}
 .sort-new.test-run-group-column.md-column.ng-isolate-scope {
     padding: 0 24px !important;
     .test-run-group {
         display: flex;
         align-items: center;
+        
         &_wrapper {
             display: flex;
             align-items: center;
@@ -13,15 +19,15 @@
             }
             &._right {
                 justify-content: flex-end;
-                @media(min-width: $breakpoint-mobile) and (max-width: 956px) {
+                @media (max-width: 956px) {
                     flex-grow: 1;
                 }
             }
-            @media(min-width: $breakpoint-mobile) and (max-width: 956px) {
+            @media (max-width: 956px) {
                 margin: 10px 0;
             }
         }
-        @media(min-width: $breakpoint-mobile) and (max-width: 956px) {
+        @media (max-width: 956px) {
             flex-wrap: wrap;
         }
         &_controls-buttons {
@@ -29,7 +35,7 @@
             max-width: 160px;
             min-width: 160px;
             margin-right: 40px;
-            @media(min-width: $breakpoint-mobile) and (max-width:  998px){ 
+            @media (max-width:  998px){ 
                 margin-right: 10px;
             }
             button {
@@ -89,6 +95,8 @@
                 md-chips-wrap.md-chips{
                     md-chip {
                         @extend %items;
+                        margin-top: 5px;
+                        margin-bottom: 5px;
                     }
                 }
             }
@@ -97,10 +105,10 @@
             }
         }
         &_other-buttons {
-            min-width: auto;
-            width: auto;
+            min-width: auto !important;
+            width: auto !important;
             margin-left: 40px;
-            @media(min-width: $breakpoint-mobile) and (max-width:  998px){ 
+            @media (max-width:  998px){ 
                 margin-left: 10px;
             }
             & #resetAllToggle {
@@ -112,25 +120,97 @@
             }
         }
     }
-    
 }
 
+.test {
+    display: flex;
+    @media(max-width: 599px) {
+        flex-wrap: wrap;
+        padding: 4px 0 0;
+    }
+    &-info {
+        flex-grow: 3;
+        @media(max-width: 599px) { 
+            width: 100%;
+            border-top: 0 !important;
+            padding-bottom: 0 !important;
+        }
+        &__wrapper {
+            display: flex;
+            @media(max-width: 599px) { 
+                display: block;
+                margin-top: 5px;
+            }
+        }
+        & .result_error.FAILED {
+            background-color: $pink-bg-new;
+        }
+        &_tags {
+            @extend %items;
+            margin-top: 0;
+            margin-bottom: 5px;
+            @media(max-width: 599px) { 
+                margin-top: 10px;
+                margin-left: 0 !important; 
+            }
+        }
+    }
+    & .text-center {
+        width: 30%;
+        @extend %noBorderPadding;
+        @media(max-width: 599px) { 
+            padding-bottom: 5px;
+        }
+    }
+    &-settings {
+        @media(max-width: 599px) { 
+            flex-grow: 1;
+        }
+        @extend %noBorderPadding;
+        &__button {
+            @media(max-width: 599px) { 
+                display: none;
+            }
+        }
+        &__menu {
+            
+            @media(min-width: $breakpoint-mobile) {
+                display: none;
+            }
+            button.md-icon-button.md-button.md-ink-ripple{
+                padding: 0;
+                margin: 0 -15px 0 0;
+            }
+        }
+    }
+}
+
+.md-open-menu-container md-menu-content{
+    width: auto;
+    min-width: auto;
+}
 %items {
     max-height: 28px;
-    border-radius: 14px;
-    background-color: $dark-coal-light-new-op01;
+    border-radius: 14px !important;
+    background-color: $dark-coal-light-new-op01 !important;
     letter-spacing: 0.2px;
     text-align: center;
     font-size: 11px;
     font-weight: 500;
-    color: $dark-coal-light-new;
-    margin-top: 5px;
-    margin-bottom: 5px;
+    color: $dark-coal-light-new !important;
     &:hover {
         background-color: $dark-coal-light-new-op02 ;
     }
     &.md-focused, &.active {
         background-color: $dark-coal-light-new;
         color: #ffffff ;
+    }
+}
+
+%noBorderPadding {
+    @media(max-width: 599px) { 
+        border-top: 0 !important;
+        padding-top: 0 !important;
+        padding-bottom: 0 !important; 
     }
 }

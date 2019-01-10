@@ -62,6 +62,8 @@
             testGroups: null,
             testGroupMode: 'PLAIN',
             testRun: testRun,
+            // mobileBreakpoint: mediaBreakpoints.mobile || 0,
+            // windowWidthService: windowWidthService,
             selectedRange: {
                 selectedTemplate: null,
                 selectedTemplateName: null,
