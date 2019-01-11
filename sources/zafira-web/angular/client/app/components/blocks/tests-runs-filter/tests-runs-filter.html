@@ -25,7 +25,7 @@
                 <div ng-class="{'disable-layer': $ctrl.isSearchActive()}"></div>
                 <div class="panel-body no-padding-t">
                     <div layout="row" layout-xs="column" ng-show="$ctrl.filterBlockExpand">
-                        <div class="manage-chip" ng-click="$ctrl.clearAndOpenFilterBlock(true); $ctrl.addFilterExpanded = true">
+                        <div class="manage-chip" ng-click="$ctrl.clearAndOpenFilterBlock(true);">
                             <md-chips class="filter-chip">
                                 <md-chip>
                                     add filter
@@ -39,7 +39,9 @@
                             <!--TODO: for what this empty disabled input-->
                             <input disabled>
                             <md-chip-template>
-                                <div style="display: inline-block;" ng-click="$ctrl.searchByFilter($chip, $mdChipsCtrl); $mdChipsCtrl.selectedChip = $index">
+                                <div style="display: inline-block;"
+                                     ng-init="$ctrl.chipsCtrl = $mdChipsCtrl"
+                                     ng-click="$ctrl.searchByFilter($chip, $index)">
                                     <span>{{$chip.name}}</span>
                                 </div>
                                 <div is-owner="{{ $chip.userId }}" user="{{ $ctrl.currentUser }}" style="display: inline-block; vertical-align: sub;">
@@ -119,7 +121,7 @@
                                             <strong>{{$chip.name.split('_').join(' ') | lowercase}}</strong>
                                             <span class="chip-operator">{{ $ctrl.SYMBOLS[$chip.operator] }}</span>
                                             <span ng-if="$ctrl.DATE_CRITERIAS.indexOf($chip.name) === -1 || $ctrl.DATE_CRITERIAS_PICKER_OPERATORS.indexOf($chip.operator) === -1">'{{ $chip.value }}'</span>
-                                            <span ng-if="$ctrl.DATE_CRITERIAS.indexOf($chip.name) != -1 && $ctrl.DATE_CRITERIAS_PICKER_OPERATORS.indexOf($chip.operator) != -1">'{{ $chip.value | date : 'MMM dd yyyy' }}'</span>
+                                            <span ng-if="$ctrl.DATE_CRITERIAS.indexOf($chip.name) !== -1 && $ctrl.DATE_CRITERIAS_PICKER_OPERATORS.indexOf($chip.operator) !== -1">'{{ $chip.value | date : 'MMM dd yyyy' }}'</span>
                                             </span>
                                 </md-chip-template>
                                 <button md-chip-remove class="md-primary filter-slice-chip-button">
@@ -132,7 +134,7 @@
             </div>
             <md-divider></md-divider>
             <div id="search" class="md-row">
-                <div ng-class="{'disable-layer': $ctrl.isFilterSelected()}"></div>
+                <div ng-class="{'disable-layer': $ctrl.isFilterActive()}"></div>
                 <div class="panel-body">
                     <div ng-show="$ctrl.fastSearchBlockExpand" layout="row" layout-md="column" layout-sm="column" layout-xs="column">
                         <div id="search-container" flex="auto">
@@ -148,8 +150,8 @@
                                        aria-describedby="basic-addon2">
                                 <div class="btn-check" layout-xs="row">
                                     <button type="button" ng-class="{'default-gray': $ctrl.fastSearch['testSuite'] && $ctrl.fastSearch['testSuite'].length !== 0, 'active': $ctrl.getActiveSearchType() === 'testSuite'}" ng-click="$ctrl.selectSearchType('testSuite')" class="btn btn-default">Test Suite</button>
-                                    <button type="button" ng-class="{'default-gray': $ctrl.fastSearch['executionURL'] && $ctrl.fastSearch['executionURL'].length != 0, 'active': $ctrl.getActiveSearchType() === 'executionURL'}" ng-click="$ctrl.selectSearchType('executionURL')" class="btn btn-default">Job URL</button>
-                                    <button type="button" ng-class="{'default-gray': $ctrl.fastSearch['appVersion'] && $ctrl.fastSearch['appVersion'].length != 0, 'active': $ctrl.getActiveSearchType() == 'appVersion'}" ng-click="$ctrl.selectSearchType('appVersion')" class="btn btn-default"> App Version</button>
+                                    <button type="button" ng-class="{'default-gray': $ctrl.fastSearch['executionURL'] && $ctrl.fastSearch['executionURL'].length !== 0, 'active': $ctrl.getActiveSearchType() === 'executionURL'}" ng-click="$ctrl.selectSearchType('executionURL')" class="btn btn-default">Job URL</button>
+                                    <button type="button" ng-class="{'default-gray': $ctrl.fastSearch['appVersion'] && $ctrl.fastSearch['appVersion'].length !== 0, 'active': $ctrl.getActiveSearchType() === 'appVersion'}" ng-click="$ctrl.selectSearchType('appVersion')" class="btn btn-default"> App Version</button>
                                 </div>
                             </div>
                         </div>
@@ -166,7 +168,7 @@
                                     <md-input-container class="searchable select pull-left no-padding" flex="nogrow">
                                         <md-select id="searchStatus" ng-change="$ctrl.onChangeSearchCriteria('status')" ng-model="$ctrl.searchParams.status" name="status" placeholder="Status">
                                             <md-option value="" disabled>Status</md-option>
-                                            <md-option ng-repeat="status in $ctrl.statuses" ng-value="status">{{ status }}</md-option>
+                                            <md-option ng-repeat="status in ::$ctrl.statuses" ng-value="::status">{{ status }}</md-option>
                                         </md-select>
                                     </md-input-container>
                                 </div>

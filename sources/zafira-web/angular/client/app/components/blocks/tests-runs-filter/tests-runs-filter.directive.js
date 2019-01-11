@@ -20,7 +20,6 @@
                                        testsRunsService, $cookieStore, UserService, $timeout,
                                        $mdDateRangePicker) {
         const subjectName = 'TEST_RUN';
-        const FAST_SEARCH_TEMPLATE = {currentModel: 'testSuite'};
         const DEFAULT_FILTER_VALUE = {
             subject: {
                 name: subjectName,
@@ -45,20 +44,17 @@
         const SELECT_CRITERIAS = ['ENV', 'PLATFORM', 'PROJECT', 'STATUS'];
         const STATUSES = ['PASSED', 'FAILED', 'SKIPPED', 'ABORTED', 'IN_PROGRESS', 'QUEUED', 'UNKNOWN'];
         const vm = {
-            addFilterExpanded: false,
             currentCriteria: angular.copy(CURRENT_CRITERIA),
             currentOperator: angular.copy(CURRENT_OPERATOR),
             currentValue: angular.copy(CURRENT_VALUE),
             filter: angular.copy(DEFAULT_FILTER_VALUE),
             filters: [],
             filterBlockExpand: false,
+            fastSearch: {},
             fastSearchBlockExpand: false,
             collapseFilter: false,
             isFilterActive: testsRunsService.isFilterActive,
             isSearchActive: testsRunsService.isSearchActive,
-            isFilterSelected: testsRunsService.isFilterActive,
-            searchFormIsActive: testsRunsService.isSearchActive,
-            getActiveFilteringTool: testsRunsService.getActiveFilteringTool,
             searchParams: testsRunsService.getLastSearchParams(),
             statuses: STATUSES,
             selectedRange: {
@@ -70,6 +66,7 @@
                 fullscreen: false
             },
             currentUser: UserService.getCurrentUser(),
+            chipsCtrl: null,
 
             matchMode: matchMode,
             onReset: onReset,
@@ -96,7 +93,38 @@
             vm.filterBlockExpand = true;
             vm.fastSearchBlockExpand = true;
             loadFilters();
-            loadPublicFilters();
+            loadPublicFilters().then(function() {
+                $timeout(function() {
+                    if (vm.isFilterActive()) {
+                        const activeFilterId = testsRunsService.getActiveFilter();
+
+                        activeFilterId && vm.chipsCtrl && vm.filters.find(function(filter, index) {
+                            if (+activeFilterId === filter.id) {
+                                vm.chipsCtrl.selectedChip = index;
+                            }
+                        });
+                    }
+                });
+            });
+            readStoredParams();
+        }
+
+        function readStoredParams() {
+            if (vm.isSearchActive()) {
+                let fromDate = testsRunsService.getSearchParam('fromDate');
+                let toDate = testsRunsService.getSearchParam('toDate');
+                const date = testsRunsService.getSearchParam('date');
+
+                date && (fromDate = toDate = date);
+                fromDate && (vm.selectedRange.dateStart = new Date(fromDate));
+                toDate && (vm.selectedRange.dateEnd = new Date(toDate));
+
+                testsRunsService.getSearchTypes().forEach(function(type) {
+                    const searchValue = testsRunsService.getSearchParam(type);
+
+                    searchValue && (vm.fastSearch[type] = searchValue);
+                });
+            }
         }
 
         function loadFilters() {
@@ -106,14 +134,14 @@
             loadFilterDataPromises.push(loadPlatforms());
             loadFilterDataPromises.push(loadProjects());
 
-            return $q.all(loadFilterDataPromises).then(function(values) {
+            return $q.all(loadFilterDataPromises).then(function() {
                 loadSubjectBuilder();
             });
         }
 
         function loadPublicFilters() {
-            FilterService.getAllPublicFilters().then(function (rs) {
-                if(rs.success) {
+            return FilterService.getAllPublicFilters().then(function (rs) {
+                if (rs.success) {
                     vm.filters = rs.data;
                 }
             });
@@ -121,7 +149,7 @@
 
         function loadEnvironments() {
             return TestRunService.getEnvironments().then(function(rs) {
-                if(rs.success) {
+                if (rs.success) {
                     vm.environments = rs.data.filter(function (env) {
                         return !!env;
                     });
@@ -218,7 +246,7 @@
                 mode.push('APPLY');
             }
 
-            if (testsRunsService.getActiveFilteringTool() === 'search') {
+            if (testsRunsService.isSearchActive()) {
                 mode.push('SEARCH');
             }
 
@@ -229,10 +257,8 @@
             vm.selectedRange.dateStart = null;
             vm.selectedRange.dateEnd = null;
             vm.searchParams = angular.copy(DEFAULT_SC);
-            // vm.fastSearch = angular.copy(FAST_SEARCH_TEMPLATE);
             vm.fastSearch = {};
             testsRunsService.resetFilteringState();
-            // getTestRuns();
             vm.onFilterChange();
             vm.chipsCtrl && (delete vm.chipsCtrl.selectedChip);
         }
@@ -263,7 +289,6 @@
                     alertify.success('Filter was updated');
                     vm.filters[vm.filters.indexOfField('id', rs.data.id)] = rs.data;
                     clearAndOpenFilterBlock(false);
-                    //TODO: search if filter is applied?
                 } else {
                     alertify.error(rs.message);
                 }
@@ -304,78 +329,17 @@
             vm.currentValue = angular.copy(CURRENT_VALUE);
         }
 
-        function searchByFilter(filter, chipsCtrl) {
-            const activeFilteringTool = testsRunsService.getActiveFilteringTool();
-
+        function searchByFilter(filter, index) {
             //return if click on already selected filter
             if (testsRunsService.getActiveFilter() === filter.id) { return; }
             //return if search tool activated
-            if (activeFilteringTool && activeFilteringTool === 'search') { return; }
+            if (vm.isSearchActive()) { return; }
 
-            !activeFilteringTool && testsRunsService.setActiveFilteringTool('filter');
+            !vm.isFilterActive() && testsRunsService.setActiveFilteringTool('filter');
             testsRunsService.setActiveFilter(filter.id);
-            vm.chipsCtrl = chipsCtrl;
-            // getTestRuns();
+            vm.chipsCtrl.selectedChip = index;
+            // fire fetch data event;
             vm.onFilterChange();
-        }
-
-        function getTestRuns(page, pageSize) { //TODO: copied from containing page controller -> refactor DRY
-            console.log('2222222doing fetching...');
-
-            const projects = $cookieStore.get('projects');
-            const params = {
-                date: null,
-                toDate: null,
-                fromDate: null,
-                page: page || 1,
-                pageSize: pageSize || 20,
-                projects: projects || []
-            };
-            vm.selectAll = false; //TODO: do it before search call instead of here
-            vm.expandedTestRuns = [];
-
-            fillFastSearchParam(params);
-            fillDateParam(params);
-
-            vm.searchParams = Object.assign({}, vm.searchParams, params);
-
-            return testsRunsService.fetchTestRuns(vm.searchParams, filter)
-            .then(function(rs) { //TODO: Use own service
-                console.log(rs);
-
-                const testRuns = rs.results;
-
-                vm.totalResults = rs.totalResults;
-                vm.pageSize = rs.pageSize;
-                vm.testRuns = testRuns;
-
-                return $q.resolve(vm.testRuns);
-            })
-            .catch(function(err) {
-                console.error(err.message);
-                return $q.reject(err);
-            });
-        }
-
-        //TODO: what the meaning?
-        function fillFastSearchParam(params) {
-            angular.forEach(vm.fastSearch, function(val, model) {
-                if (model !== 'currentModel') {
-                    params[model] = val;
-                }
-            });
-        }
-
-        function fillDateParam(params) {
-            if (vm.selectedRange.dateStart && vm.selectedRange.dateEnd) {
-                if (vm.selectedRange.dateStart.getTime() !==
-                    vm.selectedRange.dateEnd.getTime()) {
-                    params.fromDate = vm.selectedRange.dateStart;
-                    params.toDate = vm.selectedRange.dateEnd;
-                } else {
-                    params.date = vm.selectedRange.dateStart;
-                }
-            }
         }
 
         function addChip() {
@@ -403,22 +367,24 @@
             if (vm.searchParams[name]) {
                 testsRunsService.setSearchParam(name, vm.searchParams[name]);
             } else {
-                // testsRunsService.deleteSearchParam(name);
-                testsRunsService.setSearchParam(name, null);
+                testsRunsService.deleteSearchParam(name);
             }
         }
 
         function onSearchChange() {
-            const activeSearchType = testsRunsService.getActiveSearchType();
             const activeFilteringTool = testsRunsService.getActiveFilteringTool();
 
             if (activeFilteringTool && activeFilteringTool !== 'search') { return; }
 
             !activeFilteringTool && testsRunsService.setActiveFilteringTool('search');
-            testsRunsService.setSearchParam(activeSearchType, vm.fastSearch[activeSearchType]);
+            testsRunsService.getSearchTypes().forEach(function(type) {
+                vm.fastSearch[type] ? testsRunsService.setSearchParam(type, vm.fastSearch[type]) : testsRunsService.deleteSearchParam(type);
+            });
         }
 
         function openDatePicker($event, showTemplate) {
+            if (vm.isFilterActive()) { return; }
+
             vm.selectedRange.showTemplate = showTemplate;
 
             $mdDateRangePicker.show({
@@ -427,12 +393,10 @@
             })
             .then(function(result) {
                 if (result) {
-                    vm.selectedRange = result;
                     const activeFilteringTool = testsRunsService.getActiveFilteringTool();
 
-                    if (activeFilteringTool && activeFilteringTool !== 'search') { return; }
-
-                    !activeFilteringTool && testsRunsService.setActiveFilteringTool('search');
+                    vm.selectedRange = result;
+                    !vm.isSearchActive() && testsRunsService.setActiveFilteringTool('search');
                     if (vm.selectedRange.dateStart && vm.selectedRange.dateEnd) {
                         if (vm.selectedRange.dateStart.getTime() !==
                             vm.selectedRange.dateEnd.getTime()) {

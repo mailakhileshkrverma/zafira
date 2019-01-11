@@ -207,28 +207,17 @@
                         },
                         resolve: {
                             resolvedTestRuns: ['$stateParams', '$q', '$state', 'testsRunsService', ($stateParams, $q, $state, testsRunsService) => {
-                                // if ($stateParams.testRun) {
-                                //     return $q.resolve($stateParams.testRun);
-                                // } else if ($stateParams.testRunId) {
-                                //     var params = {
-                                //         id: $stateParams.testRunId
-                                //     };
-                                //
-                                //     return TestRunService.searchTestRuns(params)
-                                //     .then(function(response) {
-                                //         if (response.success && response.data.results && response.data.results[0]) {
-                                //             return response.data.results[0];
-                                //         } else {
-                                //             return $q.reject({message: 'Can\'t get test run with ID=' + $stateParams.testRunId});
-                                //         }
-                                //     })
-                                //     .catch(function(error) {
-                                //         console.log(error); //TODO: show toaster notification
-                                //         $state.go('tests/runs');
-                                //     });
-                                // } else {
-                                //     $state.go('tests/runs');
-                                // }
+                                const prevState = $state.current.name;
+
+                                // read saved search/filtering data only if we reload current page or returning from internal page
+                                if (!prevState || prevState === 'tests/run2' || prevState === 'tests/runs2') { //TODO: use correct state name
+                                    testsRunsService.resetFilteringState();
+                                    testsRunsService.readStoredParams();
+                                } else {
+                                    testsRunsService.resetFilteringState();
+                                    testsRunsService.deleteStoredParams();
+                                }
+
                                 return testsRunsService.fetchTestRuns();
                             }],
                         }
