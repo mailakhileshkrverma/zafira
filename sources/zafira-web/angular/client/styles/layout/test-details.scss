@@ -1,12 +1,11 @@
 @import "../global/var";
 
-.test-run-group-row.md-row {
-    @media(max-width: 599px) {
-        display: none;
-    }
-}
+
 .sort-new.test-run-group-column.md-column.ng-isolate-scope {
     padding: 0 24px !important;
+    @media(max-width: 599px){ 
+        padding: 0 10px !important;
+    }
     .test-run-group {
         display: flex;
         align-items: center;
@@ -16,6 +15,9 @@
             align-items: center;
             &._left {
                 flex-grow: 1;
+                @media(max-width: 599px){ 
+                    overflow-x: scroll;
+                }
             }
             &._right {
                 justify-content: flex-end;
@@ -38,6 +40,9 @@
             @media (max-width:  998px){ 
                 margin-right: 10px;
             }
+            @media(max-width: 599px){ 
+                display: none;
+            }
             button {
                 box-shadow: none;
                 background-color: $dark-coal-light-new-op01;
@@ -51,6 +56,16 @@
             padding: 3px 15px;
             min-width: 90px;
             margin-left: 17px;
+            @media(max-width: 599px){
+                padding: 3px 0;
+                min-width: auto;
+                & .pointer {
+                    padding-right: 0;
+                    & span {
+                        display: none;
+                    } 
+                }
+            }
         }
         &_group-items {
             min-width: auto;
@@ -91,8 +106,15 @@
         &_tags {
             min-width: 260px;
             width: auto;
+            @media(max-width: 599px){ 
+                display: flex;
+                max-width: calc(100vw - 20px);
+            }
             md-chips {
                 md-chips-wrap.md-chips{
+                    @media(max-width: 599px){ 
+                        display: flex;
+                    }
                     md-chip {
                         @extend %items;
                         margin-top: 5px;
@@ -185,10 +207,11 @@
     }
 }
 
-.md-open-menu-container md-menu-content{
+.md-open-menu-container md-menu-content {
     width: auto;
     min-width: auto;
 }
+
 %items {
     max-height: 28px;
     border-radius: 14px !important;
