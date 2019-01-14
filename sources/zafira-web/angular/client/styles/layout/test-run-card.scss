@@ -391,7 +391,7 @@
         z-index: 2;
         box-shadow: 0 4px 8px 0 rgba(4, 0, 0, 0.2);
         @media (min-width: $breakpoint-mobile) {
-            padding: 5px 0;
+            padding: 2px 0;
         }
     }
     
@@ -400,8 +400,8 @@
             min-height: 45px;
             height: auto;
             @media (min-width: $breakpoint-mobile) {
-                margin: 0 6px 0 20px;
-                padding: 0 12px;
+                margin: 0 2px;
+                padding: 0 22px;
             }
         }
         &__row {

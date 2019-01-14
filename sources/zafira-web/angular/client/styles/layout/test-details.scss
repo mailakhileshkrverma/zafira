@@ -246,8 +246,8 @@ md-table-container {
 
     &.md-focused,
     &.active {
-        background-color: $dark-coal-light-new;
-        color: #ffffff;
+        background-color: $dark-coal-light-new !important;
+        color: #ffffff !important;
     }
 }
 
