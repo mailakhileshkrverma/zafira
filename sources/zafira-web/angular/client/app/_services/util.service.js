@@ -3,9 +3,9 @@
 
     angular
         .module('app.services')
-        .factory('UtilService', ['$rootScope', '$mdToast', '$timeout', '$q', UtilService])
+        .factory('UtilService', ['$rootScope', '$mdToast', '$timeout', '$q', '$window', UtilService]);
 
-    function UtilService($rootScope, $mdToast, $timeout, $q) {
+    function UtilService($rootScope, $mdToast, $timeout, $q, $window) {
         var service = {};
 
         service.untouchForm = untouchForm;
@@ -17,6 +17,7 @@
         service.settingsAsMap = settingsAsMap;
         service.reconnectWebsocket = reconnectWebsocket;
         service.websocketConnected = websocketConnected;
+        service.setOffset = setOffset;
 
         service.validations = {
             username: [
@@ -248,5 +249,14 @@
             form[inputName].$setValidity(ngMessage, result);
             return result;
         };
+
+        function setOffset(event) {
+            const bottomHeight = $window.innerHeight - event.target.clientHeight - event.clientY;
+
+            $rootScope.currentOffset = 0;
+            if (bottomHeight < 400) {
+                $rootScope.currentOffset = -250 + bottomHeight;
+            }
+        }
     }
 })();

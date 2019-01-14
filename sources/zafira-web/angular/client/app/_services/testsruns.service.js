@@ -3,9 +3,17 @@
 
     angular
         .module('app.services')
-        .factory('testsRunsService', ['TestRunService', '$q', 'DEFAULT_SC', testsRunsService]);
+    .factory('testsRunsService', [
+        'TestRunService',
+        '$q',
+        'DEFAULT_SC',
+        'SettingsService',
+        'UtilService',
+        'ConfigService',
+        testsRunsService]);
 
-    function testsRunsService(TestRunService, $q, DEFAULT_SC) {
+    function testsRunsService(TestRunService, $q, DEFAULT_SC, SettingsService, UtilService,
+                              ConfigService) {
         const searchTypes = ['testSuite', 'executionURL', 'appVersion'];
         let _lastResult = [];
         let _lastParams = null;
@@ -14,6 +22,9 @@
         let _activeSearchType = searchTypes[0];
         let _searchParams = angular.copy(DEFAULT_SC);
         let _activeFilteringTool = null;
+        let _slackChannels = null;
+        let _slackAvailability = false;
+        let _slackAvailabilityFetched = false;
 
         return  {
             getSearchTypes: getSearchTypes,
@@ -36,6 +47,11 @@
             resetFilteringState: resetFilteringState,
             readStoredParams: readStoredParams,
             deleteStoredParams: deleteStoredParams,
+            fetchSlackChannels: fetchSlackChannels,
+            getSlackChannels: getSlackChannels,
+            getSlackAvailability: getSlackAvailability,
+            isSlackAvailabilityFetched: isSlackAvailabilityFetched,
+            fetchSlackAvailability: fetchSlackAvailability,
         };
 
         function getSearchTypes() {
@@ -77,9 +93,7 @@
         }
 
         function addBrowserVersion(testRun) {
-            const platform = testRun.platform
-                ? testRun.platform.split(' ')
-                : [];
+            const platform = testRun.platform ? testRun.platform.split(' ') : [];
             let version = null;
 
             if (platform.length > 1) {
@@ -195,6 +209,72 @@
                     filterId && setActiveFilter(+filterId);
                 }
             }
+        }
+
+        function getSlackChannels() {
+            return _slackChannels;
+        }
+
+        function fetchSlackChannels(force) {
+            const defer = $q.defer();
+
+            // resolve cached data if no force reloading flag
+            if (!force && _slackChannels) {
+                defer.resolve(_slackChannels);
+            }
+
+            SettingsService.getSettingByTool('SLACK').then(function(rs) {
+                if (rs.success) {
+                    const settings = UtilService.settingsAsMap(rs.data);
+
+                    _slackChannels = [];
+                    angular.forEach(settings, function(value, key) {
+                        if (key.indexOf('SLACK_NOTIF_CHANNEL_') === 0) {
+                            angular.forEach(value.split(';'), function(v) {
+                                _slackChannels.push(v);
+                            });
+                        }
+                    });
+
+                    defer.resolve(_slackChannels);
+                } else {
+                    alertify.error(rs.message);
+                    defer.reject(rs);
+                }
+            });
+
+            return defer.promise;
+        }
+
+        function getSlackAvailability() {
+            return _slackAvailability;
+        }
+
+        function isSlackAvailabilityFetched() {
+            return _slackAvailabilityFetched;
+        }
+
+        function fetchSlackAvailability(force) {
+            const defer = $q.defer();
+
+            // resolve cached data if no force reloading flag
+            if (!force && _slackAvailabilityFetched) {
+                defer.resolve(_slackAvailability);
+            }
+
+            ConfigService.getConfig('slack').then(function successCallback(rs) {
+                _slackAvailabilityFetched = true;
+
+                if (rs.success) {
+                    _slackAvailability = rs.data.available;
+                    defer.resolve(_slackAvailability);
+                } else {
+                    defer.reject(rs);
+                }
+
+            });
+
+            return defer.promise;
         }
     }
 })();

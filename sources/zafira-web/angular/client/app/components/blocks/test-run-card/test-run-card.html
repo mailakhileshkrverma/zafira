@@ -107,8 +107,8 @@
                 </div>
             </div>
             <div class="test-run-card__cell _menu">
-                <md-menu class="pull-right" md-offset="0 {{currentOffset}}">
-                    <md-button name="testRunSetting" aria-label="User settings" class="md-icon-button" data-ng-click="initMenuRights($ctrl.testRun); setOffset($event); $mdMenu.open($event);">
+                <md-menu class="pull-right" md-offset="0 {{$ctrl.currentOffset}}">
+                    <md-button name="testRunSetting" aria-label="User settings" class="md-icon-button" ng-click="$ctrl.openMenu($event, $mdMenu)">
                         <md-icon class="material-icons">more_vert</md-icon>
                     </md-button>
                     <md-menu-content width="2" class="fixed-md-menu-content">
@@ -218,8 +218,8 @@
                         clear
                     </i>
                 </md-button>
-                <md-menu md-offset="0 {{currentOffset}}">
-                    <md-button name="testRunSetting" aria-label="User settings" class="md-icon-button" data-ng-click="setOffset($event); initMenuRights($ctrl.testRun); $mdMenu.open($event);">
+                <md-menu md-offset="0 {{$ctrl.currentOffset}}">
+                    <md-button name="testRunSetting" aria-label="User settings" class="md-icon-button" ng-click="$ctrl.openMenu($event, $mdMenu)">
                         <md-icon class="material-icons">more_vert</md-icon>
                     </md-button>
                     <md-menu-content width="2" class="fixed-md-menu-content">
@@ -354,8 +354,8 @@
                     md-direction="right">Blockers</md-tooltip>
             </div>
             <div class="test-run-card__cell _menu">
-                <md-menu md-offset="0 {{currentOffset}}">
-                    <md-button name="testRunSetting" aria-label="User settings" class="md-icon-button" data-ng-click="setOffset($event); initMenuRights($ctrl.testRun); $mdMenu.open($event);">
+                <md-menu md-offset="0 {{$ctrl.currentOffset}}">
+                    <md-button name="testRunSetting" aria-label="User settings" class="md-icon-button" ng-click="$ctrl.openMenu($event, $mdMenu)">
                         <md-icon class="material-icons">more_vert</md-icon>
                     </md-button>
                     <md-menu-content width="2" class="fixed-md-menu-content">

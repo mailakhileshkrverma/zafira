@@ -45,7 +45,7 @@
 
         function init() {
             loadSlackMappings();
-            storeSlackAvailability();
+            loadSlackAvailability();
             readStoredParams();
         }
 
@@ -91,29 +91,11 @@
         }
 
         function loadSlackMappings() {
-            vm.slackChannels = [];
-            SettingsService.getSettingByTool('SLACK').then(function(rs) {
-                if (rs.success) {
-                    const settings = UtilService.settingsAsMap(rs.data);
-
-                    angular.forEach(settings, function(value, key) {
-                        if (key.indexOf('SLACK_NOTIF_CHANNEL_') === 0) {
-                            angular.forEach(value.split(';'), function(v) {
-                                vm.slackChannels.push(v);
-                            });
-                        }
-                    });
-                } else {
-                    alertify.error(rs.message);
-                }
-            });
+            testsRunsService.fetchSlackChannels();
         }
 
-        function storeSlackAvailability() {
-            vm.isSlackAvailable = false;
-            ConfigService.getConfig("slack").then(function successCallback(rs) {
-                vm.isSlackAvailable = rs.data.available;
-            });
+        function loadSlackAvailability() {
+            testsRunsService.fetchSlackAvailability();
         }
 
         function getLengthOfSelectedTestRuns() {
