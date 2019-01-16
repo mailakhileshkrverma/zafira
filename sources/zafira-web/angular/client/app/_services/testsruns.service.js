@@ -15,7 +15,7 @@
     function testsRunsService(TestRunService, $q, DEFAULT_SC, SettingsService, UtilService,
                               ConfigService) {
         const searchTypes = ['testSuite', 'executionURL', 'appVersion'];
-        let _lastResult = [];
+        let _lastResult = null;
         let _lastParams = null;
         let _lastFilters = null;
         let _activeFilterId = null;
@@ -58,7 +58,12 @@
             return searchTypes;
         }
 
-        function fetchTestRuns() {//TODO: return saved data (check conditions before) and implement force for fetching
+        function fetchTestRuns(force) {
+            // by default return cached data if possible
+            if (!force && _lastResult) {
+                return _lastResult;
+            }
+
             const filter = _activeFilterId ? '?filterId=' + _activeFilterId : undefined;
 
             // save search params
@@ -70,14 +75,15 @@
             return TestRunService.searchTestRuns(_searchParams, filter).
                 then(function(rs) {
                     if (rs.success) {
-                        const testRuns = rs.data.results;
+                        const data = rs.data;
 
-                        testRuns.forEach(function(testRun) {
+                        data.results = data.results || [];
+                        data.results.forEach(function(testRun) {
                             addBrowserVersion(testRun);
                             addJob(testRun);
                             testRun.tests = null;
                         });
-                        _lastResult = rs.data;
+                        _lastResult = data;
 
                         return $q.resolve(_lastResult);
                     } else {

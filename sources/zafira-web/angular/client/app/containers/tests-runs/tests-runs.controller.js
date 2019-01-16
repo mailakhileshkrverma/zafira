@@ -37,6 +37,7 @@
             abortSelectedTestRuns: abortSelectedTestRuns,
             batchEmail: batchEmail,
             addToSelectedTestRuns: addToSelectedTestRuns,
+            deleteSingleTestRun: deleteSingleTestRun,
         };
 
         vm.$onInit = init;
@@ -72,9 +73,9 @@
                 page !== vm.currentPage && (vm.currentPage = page);
             }
             pageSize && testsRunsService.setSearchParam('pageSize', pageSize);
-            vm.selectAll = false;
+            // vm.selectAll = false;
 
-            return testsRunsService.fetchTestRuns()
+            return testsRunsService.fetchTestRuns(true)
                 .then(function(rs) {
                     const testRuns = rs.results;
 
@@ -144,89 +145,62 @@
         function batchRerun() {
             const rerunFailures = confirm('Would you like to rerun only failures, otherwise all the tests will be restarted?');
 
-            vm.selectAll = false;
+            // vm.selectAll = false;
             for (const id in vm.testRuns) {
                 if (vm.testRuns[id].selected) {
-                    vm.rebuild(vm.testRuns[id], rerunFailures);
+                    rebuild(vm.testRuns[id], rerunFailures);
                 }
             }
         }
 
-        function batchDelete() {
+        function rebuild(testRun, rerunFailures) {
+            if (vm.jenkins.enabled) {
+                if (!rerunFailures) {//TODO: do we need this dublication?
+                    rerunFailures = confirm('Would you like to rerun only failures, otherwise all the tests will be restarted?');
+                }
+
+                TestRunService.rerunTestRun(testRun.id, rerunFailures).then(function(rs) {
+                    if (rs.success) {
+                        testRun.status = 'IN_PROGRESS';
+                        alertify.success('Rebuild triggered in CI service');
+                    } else {
+                        alertify.error(rs.message);
+                    }
+                });
+            } else {
+                window.open(testRun.jenkinsURL + '/rebuild/parameterized', '_blank');
+            }
+        }
+
+        function batchDelete() {//TODO: why we don't use confirmation in this case?
             const results = [];
             const errors = [];
-            const keys = Object.keys(vm.testRuns);
-            const keysToDelete = keys.filter(function (key) {
-                return vm.testRuns[key].selected;
-            });
+            const keysToDelete = Object.keys(vm.selectedTestRuns);
+            const promises = keysToDelete.reduce(function(arr, key) {
+                arr.push(deleteTestRunFromQueue(vm.selectedTestRuns[key].id));
 
-            vm.selectAll = false;
-            keysToDelete.forEach(function (key) {
-                vm.deleteTestRun(vm.testRuns[key].id, true).then(function (rs) {
-                    showDeleteMessage(rs, keysToDelete, results, errors);
-                });
-            });
-        }
+                return arr;
+            }, []);
 
-        function showDeleteMessage(rs, keysToDelete, results, errors) {
-            let message;
-
-            if (rs.success) {
-                results.push(rs);
-            } else {
-                errors.push(rs);
-            }
-
-            message = buildMessage(keysToDelete, results, errors);
-            if(message.message) {
-                alertify.success(message.message);
-            } else if(message.errorMessage) {
-                alertify.error(message.errorMessage);
-            }
-        }
-
-        function buildMessage(keysToDelete, results, errors) {
-            const result = {};
-
-            if (keysToDelete.length === results.length + errors.length) {
-                if (results.length) {
-                    let message = results.length ? results[0].message : '';
-                    let ids = '';
-
-                    results.forEach(function(result, index) {
-                        ids = ids + '#' + result.id;
-                        if (index !== results.length - 1) {
-                            ids += ', ';
-                        }
-                    });
-                    message = message.format(results.length > 1 ? 's' : ' ', ids);
-                    result.message = message;
+            $q.all(promises).finally(function() {
+                //load previous page if was selected all tests and it was a last but not single page
+                if (keysToDelete.length === vm.testRuns.length  && vm.currentPage === Math.ceil(vm.totalResults / vm.pageSize) && vm.currentPage !== 1) {
+                    getTestRuns(vm.currentPage - 1);
+                } else {
+                    getTestRuns();
                 }
-                if (errors.length) {
-                    let errorIds = '';
-                    let errorMessage = errors.length ? errors[0].message : '';
-
-                    errors.forEach(function(result, index) {
-                        errorIds = errorIds + '#' + result.id;
-                        if (index !== errors.length - 1) {
-                            errorIds += ', ';
-                        }
-                    });
-                    errorMessage = errorMessage.format(errors.length > 1 ? 's' : ' ', errorIds);
-                    result.errorMessage = errorMessage;
-                }
-            }
-
-            return result;
+            });
         }
 
         function abortSelectedTestRuns() {
             if (vm.jenkins.enabled) {
-                for (const id in vm.selectedTestRuns) {
+                const selectedIds = Object.keys(vm.selectedTestRuns);
+
+                selectedIds.forEach(function(id) {
                     if (vm.selectedTestRuns[id].status === 'IN_PROGRESS') {
                         abort(vm.selectedTestRuns[id]);
                     }
-                }
+                });
             } else {
                 alertify.error('Unable connect to jenkins');
             }
@@ -235,13 +209,13 @@
         function abort(testRun) {
             if (vm.jenkins.enabled) {
                 TestRunService.abortCIJob(testRun.id, testRun.ciRunId).then(function (rs) {
-                    if(rs.success) {
+                    if (rs.success) {
                         const abortCause = {};
                         const currentUser = UserService.getCurrentUser();
 
                         abortCause.comment = 'Aborted by ' + currentUser.username;
                         TestRunService.abortTestRun(testRun.id, testRun.ciRunId, abortCause).then(function(rs) {
-                            if(rs.success){
+                            if (rs.success){
                                 testRun.status = 'ABORTED';
                                 alertify.success('Testrun ' + testRun.testSuite.name + ' is aborted' );
                             } else {
@@ -259,15 +233,15 @@
         }
 
         function batchEmail(event) {
-            const testRuns = [];
+            const selectedIds = Object.keys(vm.selectedTestRuns);
+            const testRunsForEmail = selectedIds.reduce(function(arr, key) {
+                arr.push(vm.selectedTestRuns[key]);
 
-            vm.selectAll = false;
-            for (const id in vm.testRuns) {
-                if (vm.testRuns[id].selected) {
-                    testRuns.push(vm.testRuns[id]);
-                }
-            }
-            showEmailDialog(testRuns, event);
+                return arr;
+            }, []);
+
+            // vm.selectAll = false;
+            showEmailDialog(testRunsForEmail, event);
         }
 
         function showEmailDialog(testRuns, event) {
@@ -286,12 +260,41 @@
 
         function addToSelectedTestRuns(testRun) {
             $timeout(function () {
-                if(testRun.selected) {
+                if (testRun.selected) {
                     vm.selectedTestRuns[testRun.id] = testRun;
                 } else {
                     delete vm.selectedTestRuns[testRun.id];
                 }
             }, 100);
+        }
+
+        function deleteSingleTestRun(testRun) {
+            const confirmation = confirm('Do you really want to delete "' + testRun.testSuite.name + '" test run?');
+
+            if (confirmation) {
+                const id = testRun.id;
+                TestRunService.deleteTestRun(id).then(function(rs) {
+                    const messageData = rs.success ? {success: rs.success, id: id, message: 'Test run{0} {1} removed'} : {id: id, message: 'Unable to delete test run{0} {1}'};
+
+                    UtilService.showDeleteMessage(messageData, [id], [], []);
+                    if (rs.success) {
+                        //if it was last item on the page try to load previous page
+                        if (vm.testRuns.length === 1 && vm.currentPage !== 1) {
+                            getTestRuns(vm.currentPage - 1);
+                        } else {
+                            getTestRuns();
+                        }
+                    }
+                });
+            }
+        }
+
+        function deleteTestRunFromQueue(id) {
+            return TestRunService.deleteTestRun(id).then(function(rs) {
+                const messageData = rs.success ? {success: rs.success, id: id, message: 'Test run{0} {1} removed'} : {id: id, message: 'Unable to delete test run{0} {1}'};
+
+                UtilService.showDeleteMessage(messageData, [id], [], []);
+            });
         }
     }
 })();

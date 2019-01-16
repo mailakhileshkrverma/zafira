@@ -138,39 +138,39 @@
                             </md-button>
                         </md-menu-item>
                         <md-menu-item ng-if="$ctrl.testRun.status != 'IN_PROGRESS'">
-                            <md-button name="export" data-ng-click="export($ctrl.testRun)">
+                            <md-button name="export" data-ng-click="$ctrl.exportTestRun()">
                                 Export to HTML
                             </md-button>
                         </md-menu-item>
                         <md-menu-item ng-if="showNotifyInSlackOption" has-any-permission="['MODIFY_TEST_RUNS']">
-                            <md-button name="notifyInSlack" data-ng-click="notifyInSlack($ctrl.testRun)">
+                            <md-button name="notifyInSlack" data-ng-click="$ctrl.notifyInSlack()">
                                 Notify in Slack
                             </md-button>
                         </md-menu-item>
                         <md-divider></md-divider>
                         <md-menu-item ng-if="showBuildNowOption" has-any-permission="['TEST_RUNS_CI']">
-                            <md-button name="buildNow" data-ng-click="buildNow($ctrl.testRun, $event)">
+                            <md-button name="buildNow" data-ng-click="$ctrl.buildNow($event)">
                                 Build now
                             </md-button>
                         </md-menu-item>
                         <md-menu-item ng-if="$ctrl.testRun.status=='IN_PROGRESS'" has-any-permission="['TEST_RUNS_CI']">
-                            <md-button name="abort" data-ng-click="abort($ctrl.testRun, false)">
+                            <md-button name="abort" data-ng-click="$ctrl.abort()">
                                 Abort
                             </md-button>
                         </md-menu-item>
                         <md-menu-item has-any-permission="['TEST_RUNS_CI']">
-                            <md-button name="rebuild" data-ng-click="rerun($ctrl.testRun, $event)">
+                            <md-button name="rebuild" data-ng-click="$ctrl.rerun($event)">
                                 Rebuild
                             </md-button>
                         </md-menu-item>
                         <md-menu-item ng-if="$ctrl.testRun.status!='PASSED'" has-any-permission="['TEST_RUNS_CI']">
-                            <md-button name="debug" ng-click="startDebug($ctrl.testRun)">
+                            <md-button name="debug" ng-click="$ctrl.startDebug()">
                                 Debug
                             </md-button>
                         </md-menu-item>
                         <md-divider has-any-permission="['MODIFY_TEST_RUNS']"></md-divider>
-                        <md-menu-item ng-if="showDeleteTestRunOption" has-any-permission="['MODIFY_TEST_RUNS']">
-                            <md-button name="delete" data-ng-click="deleteTestRunAction($ctrl.testRun)">
+                        <md-menu-item ng-if="$ctrl.showDeleteTestRunOption" has-any-permission="['MODIFY_TEST_RUNS']">
+                            <md-button name="delete" data-ng-click="$ctrl.onTestRunDelete()">
                                 Delete
                             </md-button>
                         </md-menu-item>
@@ -249,39 +249,39 @@
                             </md-button>
                         </md-menu-item>
                         <md-menu-item ng-if="$ctrl.testRun.status != 'IN_PROGRESS'">
-                            <md-button name="export" data-ng-click="export($ctrl.testRun)">
+                            <md-button name="export" data-ng-click="$ctrl.exportTestRun()">
                                 Export to HTML
                             </md-button>
                         </md-menu-item>
                         <md-menu-item ng-if="showNotifyInSlackOption" has-any-permission="['MODIFY_TEST_RUNS']">
-                            <md-button name="notifyInSlack" data-ng-click="notifyInSlack($ctrl.testRun)">
+                            <md-button name="notifyInSlack" data-ng-click="$ctrl.notifyInSlack()">
                                 Notify in Slack
                             </md-button>
                         </md-menu-item>
                         <md-divider></md-divider>
                         <md-menu-item ng-if="showBuildNowOption" has-any-permission="['TEST_RUNS_CI']">
-                            <md-button name="buildNow" data-ng-click="buildNow($ctrl.testRun, $event)">
+                            <md-button name="buildNow" data-ng-click="$ctrl.buildNow($event)">
                                 Build now
                             </md-button>
                         </md-menu-item>
                         <md-menu-item ng-if="$ctrl.testRun.status=='IN_PROGRESS'" has-any-permission="['TEST_RUNS_CI']">
-                            <md-button name="abort" data-ng-click="abort($ctrl.testRun, false)">
+                            <md-button name="abort" data-ng-click="$ctrl.abort()">
                                 Abort
                             </md-button>
                         </md-menu-item>
                         <md-menu-item has-any-permission="['TEST_RUNS_CI']">
-                            <md-button name="rebuild" data-ng-click="rerun($ctrl.testRun, $event)">
+                            <md-button name="rebuild" data-ng-click="$ctrl.rerun($event)">
                                 Rebuild
                             </md-button>
                         </md-menu-item>
                         <md-menu-item ng-if="$ctrl.testRun.status!='PASSED'" has-any-permission="['TEST_RUNS_CI']">
-                            <md-button name="debug" ng-click="startDebug($ctrl.testRun)">
+                            <md-button name="debug" ng-click="$ctrl.startDebug()">
                                 Debug
                             </md-button>
                         </md-menu-item>
                         <md-divider has-any-permission="['MODIFY_TEST_RUNS']"></md-divider>
-                        <md-menu-item ng-if="showDeleteTestRunOption" has-any-permission="['MODIFY_TEST_RUNS']">
-                            <md-button name="delete" data-ng-click="deleteTestRunAction($ctrl.testRun)">
+                        <md-menu-item ng-if="$ctrl.showDeleteTestRunOption" has-any-permission="['MODIFY_TEST_RUNS']">
+                            <md-button name="delete" data-ng-click="$ctrl.onTestRunDelete()">
                                 Delete
                             </md-button>
                         </md-menu-item>
@@ -292,10 +292,10 @@
         <div class="test-run-card__row _wrapper _middle">
             <div class="test-run-card__row _app-file">
                 <div class="test-run-card__app-icon">
-                    <md-icon class="material-icons testrun-appversion-icon" data-ng-if="true || !$ctrl.testRun.appVersionValid && $ctrl.testRun.appVersion">insert_drive_file</md-icon>
+                    <md-icon class="material-icons testrun-appversion-icon" data-ng-if="!$ctrl.testRun.appVersionValid && $ctrl.testRun.appVersion">insert_drive_file</md-icon>
                     <md-icon class="material-icons testrun-appversion-icon" data-ng-if="$ctrl.testRun.appVersionValid && $ctrl.testRun.appVersion">file_download</md-icon>
                 </div>
-                <div class="test-run-card__app-name" ng-show="true || !$ctrl.testRun.appVersionValid" ng-mouseenter="checkFilePresence($ctrl.testRun)">myfitnesspal-develop-11361-release.apk{{$ctrl.testRun.appVersion}}</div>
+                <div class="test-run-card__app-name" ng-show="!$ctrl.testRun.appVersionValid" ng-mouseenter="checkFilePresence($ctrl.testRun)">myfitnesspal-develop-11361-release.apk{{$ctrl.testRun.appVersion}}</div>
                 <div class="test-run-card__app-name" ng-show="$ctrl.testRun.appVersionValid" ng-click="downloadApplication($ctrl.testRun.appVersion)">{{$ctrl.testRun.appVersion}}</div>
                 <div class="test-run-card__app-icon _spinner">
                     <md-progress-circular ng-show="$ctrl.testRun.appVersionLoading !== undefined" md-mode="indeterminate"
@@ -385,39 +385,39 @@
                             </md-button>
                         </md-menu-item>
                         <md-menu-item ng-if="$ctrl.testRun.status != 'IN_PROGRESS'">
-                            <md-button name="export" data-ng-click="export($ctrl.testRun)">
+                            <md-button name="export" data-ng-click="$ctrl.exportTestRun()">
                                 Export to HTML
                             </md-button>
                         </md-menu-item>
                         <md-menu-item ng-if="showNotifyInSlackOption" has-any-permission="['MODIFY_TEST_RUNS']">
-                            <md-button name="notifyInSlack" data-ng-click="notifyInSlack($ctrl.testRun)">
+                            <md-button name="notifyInSlack" data-ng-click="$ctrl.notifyInSlack()">
                                 Notify in Slack
                             </md-button>
                         </md-menu-item>
                         <md-divider></md-divider>
                         <md-menu-item ng-if="showBuildNowOption" has-any-permission="['TEST_RUNS_CI']">
-                            <md-button name="buildNow" data-ng-click="buildNow($ctrl.testRun, $event)">
+                            <md-button name="buildNow" data-ng-click="$ctrl.buildNow($event)">
                                 Build now
                             </md-button>
                         </md-menu-item>
                         <md-menu-item ng-if="$ctrl.testRun.status=='IN_PROGRESS'" has-any-permission="['TEST_RUNS_CI']">
-                            <md-button name="abort" data-ng-click="abort($ctrl.testRun, false)">
+                            <md-button name="abort" data-ng-click="$ctrl.abort()">
                                 Abort
                             </md-button>
                         </md-menu-item>
                         <md-menu-item has-any-permission="['TEST_RUNS_CI']">
-                            <md-button name="rebuild" data-ng-click="rerun($ctrl.testRun, $event)">
+                            <md-button name="rebuild" data-ng-click="$ctrl.rerun($event)">
                                 Rebuild
                             </md-button>
                         </md-menu-item>
                         <md-menu-item ng-if="$ctrl.testRun.status!='PASSED'" has-any-permission="['TEST_RUNS_CI']">
-                            <md-button name="debug" ng-click="startDebug($ctrl.testRun)">
+                            <md-button name="debug" ng-click="$ctrl.startDebug()">
                                 Debug
                             </md-button>
                         </md-menu-item>
                         <md-divider has-any-permission="['MODIFY_TEST_RUNS']"></md-divider>
-                        <md-menu-item ng-if="showDeleteTestRunOption" has-any-permission="['MODIFY_TEST_RUNS']">
-                            <md-button name="delete" data-ng-click="deleteTestRunAction($ctrl.testRun)">
+                        <md-menu-item ng-if="$ctrl.showDeleteTestRunOption" has-any-permission="['MODIFY_TEST_RUNS']">
+                            <md-button name="delete" data-ng-click="$ctrl.onTestRunDelete()">
                                 Delete
                             </md-button>
                         </md-menu-item>

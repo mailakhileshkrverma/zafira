@@ -16,7 +16,7 @@
                             currentUser: null
                         },
                         resolve: {
-                            currentUser: ['$stateParams', '$q', 'UserService', '$state', ($stateParams, $q, UserService, $state) => {
+                            currentUser: ['$stateParams', '$q', 'UserService', '$state', ($stateParams, $q, UserService, $state) => {//TODO: use usual function instaed of arrow
                                 var currentUser = UserService.getCurrentUser();
 
                                 if (!currentUser) {
@@ -48,7 +48,7 @@
                             currentUser: null
                         },
                         resolve: {
-                            currentUser: ['$stateParams', '$q', 'UserService', '$state', ($stateParams, $q, UserService, $state) => {
+                            currentUser: ['$stateParams', '$q', 'UserService', '$state', ($stateParams, $q, UserService, $state) => {//TODO: remove unused $stateParams and use usual function instaed of arrow
                                 var currentUser = UserService.getCurrentUser();
 
                                 if (!currentUser) {
@@ -143,17 +143,17 @@
                             requireLogin: true
                         }
                     })
-                    .state('tests/run2', { //TODO: change state nad url after task is finished
+                    .state('tests/run', {
                         controller: 'TestDetailsController',
                         controllerAs: '$ctrl',
-                        url: '/tests/runs2/:testRunId',
+                        url: '/tests/runs/:testRunId',
                         templateUrl: 'app/containers/test-details/test-details.html',
                         store: true,
                         params: {
                             testRun: null,
                         },
                         resolve: {
-                            testRun: ['$stateParams', '$q', '$state', 'TestRunService', ($stateParams, $q, $state, TestRunService) => {
+                            testRun: ['$stateParams', '$q', '$state', 'TestRunService', function($stateParams, $q, $state, TestRunService) {
                                 if ($stateParams.testRun) {
                                     return $q.resolve($stateParams.testRun);
                                 } else if ($stateParams.testRunId) {
@@ -176,27 +176,27 @@
                                 } else {
                                     $state.go('tests/runs');
                                 }
-                            }],
+                            }]
                         }
                     })
-                    .state('tests/run', {
-	                    url: '/tests/runs/:id',
+                    .state('tests/run2', {
+	                    url: '/tests/runs2/:id',
 	                    templateUrl: 'app/_testruns/list.html',
                         store: true,
                         data: {
                             requireLogin: true
                         }
 	                })
-                    .state('tests/runs', {
-                        url: '/tests/runs',
+                    .state('tests/runs2', {
+                        url: '/tests/runs2',
                         templateUrl: 'app/_testruns/list.html',
                         store: true,
                         data: {
                             requireLogin: true
                         }
                     })
-                    .state('tests/runs2', {
-                        url: '/tests/runs2',
+                    .state('tests/runs', {
+                        url: '/tests/runs',
                         templateUrl: 'app/containers/tests-runs/tests-runs.html',
                         controller: 'TestsRunsController',
                         controllerAs: '$ctrl',
@@ -206,19 +206,20 @@
                             classes: 'p-tests-runs'
                         },
                         resolve: {
-                            resolvedTestRuns: ['$stateParams', '$q', '$state', 'testsRunsService', ($stateParams, $q, $state, testsRunsService) => {
+                            resolvedTestRuns: ['$state', 'testsRunsService', function($state, testsRunsService) {
                                 const prevState = $state.current.name;
+                                let force = false;
 
+                                testsRunsService.resetFilteringState();
                                 // read saved search/filtering data only if we reload current page or returning from internal page
-                                if (!prevState || prevState === 'tests/run2' || prevState === 'tests/runs2') { //TODO: use correct state name
-                                    testsRunsService.resetFilteringState();
+                                if (!prevState || prevState === 'tests/run' || prevState === 'tests/runs') {
                                     testsRunsService.readStoredParams();
                                 } else {
-                                    testsRunsService.resetFilteringState();
                                     testsRunsService.deleteStoredParams();
+                                    force = true;
                                 }
 
-                                return testsRunsService.fetchTestRuns();
+                                return testsRunsService.fetchTestRuns(force);
                             }],
                         }
                     })
