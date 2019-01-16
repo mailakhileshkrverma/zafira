@@ -1,49 +1,75 @@
 (function () {
     'use strict';
 
-    angular.module('app').controller('CommentsController', [
+    angular.module('app').controller('BuildNowController', [
         '$scope',
         '$mdDialog',
         'TestRunService',
-        'SlackService',
         'testRun',
-        'isSlackAvailable',
-        'slackChannels',
-        CommentsController]);
+        BuildNowController]);
 
-    function CommentsController($scope, $mdDialog, TestRunService, SlackService, testRun, isSlackAvailable, slackChannels) {
+    function BuildNowController($scope, $mdDialog, TestRunService, testRun) {
         $scope.title = testRun.testSuite.name;
-        $scope.testRun = angular.copy(testRun);
+        $scope.textRequired = false;
 
-        $scope.markReviewed = function(){
-            var rq = {};
+        $scope.testRun = testRun;
 
-            rq.comment = $scope.testRun.comments;
-            if ((rq.comment == null || rq.comment == "") && ((testRun.failed > 0 && testRun.failed > testRun.failedAsKnown) || testRun.skipped > 0)) {
-                alertify.error('Unable to mark as Reviewed test run with failed/skipped tests without leaving some comment!');
-            } else {
-                TestRunService.markTestRunAsReviewed($scope.testRun.id, rq).then(function(rs) {
-                    if(rs.success) {
-                        $scope.testRun.reviewed = true;
-                        $scope.hide($scope.testRun);
-                        alertify.success('Test run #' + $scope.testRun.id + ' marked as reviewed');
-                        if (isSlackAvailable && slackChannels.indexOf(testRun.job.name) !== -1) {
-                            if (confirm("Would you like to post latest test run status to slack?")) {
-                                SlackService.triggerReviewNotif($scope.testRun.id);
-                            }
-                        }
-                    } else {
-                        alertify.error(rs.message);
-                    }
-                });
+        $scope.buildNow = function () {
+            $scope.hide();
+            var jobParametersMap = {};
+            for (var i = 0; i < $scope.jobParameters.length; i++){
+                jobParametersMap[$scope.jobParameters[i].name] = $scope.jobParameters[i].value;
             }
+            TestRunService.buildTestRun($scope.testRun.id, jobParametersMap).then(function(rs) {
+                if(rs.success)
+                {
+                    alertify.success('CI job is building, it may take some time before status is updated');
+                }
+                else
+                {
+                    alertify.error(rs.message);
+                }
+            });
         };
-        $scope.hide = function(testRun) {
-            $mdDialog.hide(testRun);
+        $scope.jobParameters = [];
+        $scope.isJobParametersLoaded = false;
+        $scope.noValidJob = false;
+        $scope.getJobParameters = function () {
+            TestRunService.getJobParameters($scope.testRun.id).then(function(rs) {
+                if(rs.success)
+                {
+                    $scope.jobParameters = rs.data;
+                    for (var i = 0; i < $scope.jobParameters.length; i++){
+                        if ($scope.jobParameters[i].parameterClass === 'BOOLEAN'){
+                            $scope.jobParameters[i].value = JSON.parse($scope.jobParameters[i].value);
+                            if ($scope.jobParameters[i].name === "rerun_failures"){
+                                $scope.jobParameters[i].value = false;
+                            }
+                            if ($scope.jobParameters[i].name === "debug"){
+                                $scope.jobParameters[i].value = false;
+                            }
+
+                        }
+                    }
+                    $scope.isJobParametersLoaded = true;
+                    $scope.noValidJob = $scope.jobParameters == '';
+                }
+                else
+                {
+                    $scope.hide();
+                    alertify.error(rs.message);
+                }
+            });
+        };
+        $scope.hide = function() {
+            $mdDialog.hide();
         };
         $scope.cancel = function() {
             $mdDialog.cancel();
         };
+        (function initController() {
+            $scope.getJobParameters();
+        })();
     }
 
 })();
