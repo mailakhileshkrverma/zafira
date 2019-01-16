@@ -149,9 +149,13 @@ md-table-container {
     
         .test {
             display: flex;
+            width: calc(100vw - 100px);
             @media(max-width: 599px) {
                 flex-wrap: wrap;
                 padding: 4px 0 0;
+                width: calc(100vw - 60px);
+            }
+            @media (max-width: 480px) {
                 width: 100vw;
             }
             @at-root {
@@ -176,8 +180,8 @@ md-table-container {
             }
             &-info {
                 flex-grow: 3;
-                @media (max-width: 599px) {
-                    width: 50%;
+                @media (max-width: 730px) {
+                    width: 55%;
                 }
                 @media(max-width: 599px) {
                     width: 100%;
