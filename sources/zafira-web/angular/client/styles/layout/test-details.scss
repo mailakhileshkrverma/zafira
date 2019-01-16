@@ -167,6 +167,13 @@ md-table-container {
                     background-color: $green-bg-light-new;
                 }
             }
+            &.danger {
+                & .test-info,
+                & .text-center,
+                & .test-settings {
+                    background-color: $pink-bg-light-new;
+                }
+            }
             &-info {
                 flex-grow: 3;
                 @media (max-width: 599px) {
