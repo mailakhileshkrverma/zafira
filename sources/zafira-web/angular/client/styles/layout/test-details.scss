@@ -152,6 +152,7 @@ md-table-container {
             @media(max-width: 599px) {
                 flex-wrap: wrap;
                 padding: 4px 0 0;
+                width: 100vw;
             }
             @at-root {
                 .md-open-menu-container md-menu-content {
@@ -168,6 +169,9 @@ md-table-container {
             }
             &-info {
                 flex-grow: 3;
+                @media (max-width: 599px) {
+                    width: 50%;
+                }
                 @media(max-width: 599px) {
                     width: 100%;
                     border-top: 0 !important;
@@ -182,6 +186,9 @@ md-table-container {
                 }
                 & .result_error.FAILED {
                     background-color: $pink-bg-new;
+                    & .test-error {
+                        word-wrap: break-word;
+                    }
                 }
                 &_tags {
                     @extend %items;
@@ -233,7 +240,7 @@ md-table-container {
 %items {
     max-height: 28px;
     border-radius: 14px !important;
-    background-color: $dark-coal-light-new-op01 !important;
+    background-color: rgba(0, 0, 0, .15) !important;
     letter-spacing: 0.2px;
     text-align: center;
     font-size: 11px;
