@@ -258,7 +258,7 @@
             });
         }
 
-        function addToSelectedTestRuns(testRun) {
+        function addToSelectedTestRuns(testRun) { //TODO: why do we use object here enstaed of array?
             $timeout(function () {
                 if (testRun.selected) {
                     vm.selectedTestRuns[testRun.id] = testRun;

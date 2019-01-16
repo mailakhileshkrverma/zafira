@@ -8,7 +8,7 @@
                                                        testsRunsService, $rootScope, UtilService,
                                                        $state, $timeout, $mdDialog, $mdToast,
                                                        SlackService, TestRunService, UserService,
-                                                       $interval) {
+                                                       $interval, DownloadService) {
                 const local = {
                     currentUser: UserService.getCurrentUser(),
                     testRunInDebugMode: null,
@@ -47,6 +47,8 @@
                     rerun: rerun,
                     startDebug: startDebug,
                     onTestRunDelete: onTestRunDelete,
+                    checkFilePresence: checkFilePresence,
+                    downloadApplication: downloadApplication,
                 };
 
                 vm.$onInit = init;
@@ -449,6 +451,34 @@
                             }
                         });
                     }
+                }
+
+                function checkFilePresence() {
+                    if (!vm.testRun.appVersionValid) {
+                        vm.testRun.appVersionLoading = true;
+                        DownloadService.check(vm.testRun.appVersion).then(function (rs) {
+                            if (rs.success) {
+                                vm.testRun.appVersionValid = rs.data;
+                            } else {
+                                //alertify.error(rs.message);
+                            }
+                            delete vm.testRun.appVersionLoading;
+
+                            return rs.data;
+                        });
+                    }
+                }
+
+                function downloadApplication() {
+                    const appVersion = $ctrl.testRun.appVersion;
+
+                    DownloadService.download(appVersion).then(function (rs) {
+                        if (rs.success) {
+                            downloadFromByteArray(appVersion, rs.res);
+                        } else {
+                            alertify.error(rs.message);
+                        }
+                    });
                 }
             },
             scope: {
