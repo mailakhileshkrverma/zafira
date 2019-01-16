@@ -30,6 +30,7 @@
                     showCommentsDialog: showCommentsDialog,
                     sendAsEmail: sendAsEmail,
                     createSpreadsheet: createSpreadsheet,
+                    selectTest: selectTest,
                 };
 
                 vm.$onInit = init;
@@ -51,6 +52,9 @@
                     }
                 }
 
+                function selectTest() {
+                    console.log("here")
+                }
                 function initSlackAvailability() {
                     if (testsRunsService.isSlackAvailabilityFetched()) {
                         vm.isSlackAvailable = testsRunsService.getSlackAvailability();

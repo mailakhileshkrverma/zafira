@@ -2,6 +2,7 @@
 
 
 .test-run-card {
+    position: relative;
     .p-test-details & {
         padding: 5px 20px;
         position: fixed;
@@ -11,6 +12,17 @@
         background-color: white;
         z-index: 2;
         box-shadow: 0 4px 8px 0 rgba(4, 0, 0, 0.2);
+    }
+    &__clickable {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        right: 0;
+        left: 0;
+        z-index: 1;
+        &:hover {
+            background-color: rgba(0,0,0,.05);
+        }
     }
     &__wrapper {
         &-left,
@@ -97,6 +109,9 @@
             //width: 80px;
             md-checkbox {
                 margin-bottom: 0;
+            }
+            span {
+                z-index: 2;
             }
             .md-label {
                 margin: 0;
@@ -237,6 +252,7 @@
             }
         }
         &._menu {
+            z-index: 2;
             width: 6%;
             min-width: 40px;
             justify-content: center;
@@ -278,6 +294,7 @@
             }
         }
         &-additions {
+            z-index: 2;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -287,6 +304,7 @@
     }
 
     &__job {
+        z-index: 2;
         display: flex;
         flex-wrap: wrap;
         &-name {
