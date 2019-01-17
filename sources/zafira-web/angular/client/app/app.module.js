@@ -13,6 +13,7 @@
         ,'app.testcase'
         ,'app.testrun'
         ,'app.testruninfo'
+        ,'app.testRunInfos'
         ,'app.testsRuns'
         ,'app.testDetails'
         ,'app.view'

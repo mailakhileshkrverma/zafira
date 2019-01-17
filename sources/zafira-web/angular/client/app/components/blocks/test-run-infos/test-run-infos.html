@@ -1,0 +1,114 @@
+<div>
+    <div class="test-info">
+        <b name="testName" class="test-info__name" data-ng-class="$ctrl.test.status === 'QUEUED' ? 'grey_font' : 'black_font'">{{$ctrl.test.name}}
+            <span data-ng-if="$ctrl.test.blocker" class="badge ng-binding bug-label-bg">BLOCKER</span></b>
+        <div class="test-info__wrapper">
+            <div>
+                <span data-ng-if="$ctrl.test.finishTime && ($ctrl.test.finishTime - $ctrl.test.startTime)/1000 > 0 && $ctrl.test.status !== 'QUEUED'"
+                    data-ng-class="$ctrl.test.status === 'QUEUED' ? 'grey_font' : 'light_text'">
+                    <i class="fa fa-clock-o" aria-hidden="true"></i>
+                    {{($ctrl.test.finishTime - $ctrl.test.startTime)/1000 | number:0}}
+                    seconds</span>
+                <span name="testOwner" data-ng-if="$ctrl.test.owner" data-ng-class="$ctrl.test.status === 'QUEUED' ? 'grey_font' : 'light_text'">
+                    <i class="fa fa-user" aria-hidden="true"></i>
+                    {{$ctrl.test.owner}}</span>
+                <span name="secondaryOwner" data-ng-if="$ctrl.test.secondaryOwner"
+                    data-ng-class="$ctrl.test.status === 'QUEUED' ? 'grey_font' : 'light_text'">
+                    <i class="fa fa-user" aria-hidden="true"></i>
+                    {{$ctrl.test.secondaryOwner}}</span>
+                <span name="device" data-ng-if="$ctrl.test.testConfig.device" data-ng-class="$ctrl.test.status === 'QUEUED' ? 'grey_font' : 'light_text'">
+                    <i class="fa fa-mobile" aria-hidden="true"></i>
+                    {{$ctrl.test.testConfig.device}}</span>
+            </div>
+            <div ng-if="$ctrl.test.tags && $ctrl.test.tags.length" class="test-info_tags">
+                <span class="test-info_tags_tag" ng-repeat="tag in $ctrl.test.tags">
+                    <span ng-show="$first">#</span>
+                    {{tag.value}}
+                    <span ng-show="!$last">,
+                    </span>
+                </span>
+            </div>
+        </div>
+        <div class="result_error {{$ctrl.test.status}} {{main.theme}}" data-ng-if="$ctrl.test.message && ($ctrl.test.status === 'FAILED' || $ctrl.test.status === 'SKIPPED' || $ctrl.test.status === 'ABORTED')">
+            <div class="white-space-pre-line">
+                <show-more name="errorMsg" class="test-error" element-id="$ctrl.test.id" text="$ctrl.test.message"
+                    limit="100"></show-more>
+            </div>
+        </div>
+    </div>
+    <div class="text-center">
+        <span data-ng-repeat="issue in $ctrl.test.workItems" class="work-items">
+            <a name="taskTicket" href="{{jira.url + '/browse/' + issue.jiraId}}" target="_blank"
+                data-ng-if="issue.type === 'TASK'" class="badge ng-binding clearfix task-label-bg">{{issue.jiraId}}</a>
+            <a name="bugTicket" href="{{jira.url + '/browse/' + issue.jiraId}}" target="_blank"
+                data-ng-if="issue.type === 'BUG'" class="badge ng-binding clearfix bug-label-bg"
+                alt="{{issue.description}}" title="{{issue.description}}">{{issue.jiraId}}</a>
+        </span>
+    </div>
+    <div class="test-settings">
+        <div class="align-middle align-right" ng-if="$ctrl.test.status != 'QUEUED'">
+            <md-menu class="pull-right test-settings__menu" md-offset="0 {{currentOffset}}">
+                <md-button name="testRunSetting" aria-label="User settings" class="md-icon-button"
+                    data-ng-click="initMenuRights($ctrl.test); setOffset($event); $mdMenu.open($event);"> 
+                    <!-- TODo -->
+                    <md-icon class="material-icons">more_vert</md-icon>
+                </md-button>
+                <md-menu-content width="2" class="fixed-md-menu-content">
+                    <md-menu-item data-ng-show="$ctrl.test.artifactsToShow.length">
+                        <md-menu>
+                            <md-button name="testArtifacts" aria-label="Test artifacts"
+                                class="md-icon-button" ng-click="$mdMenu.open($event);">
+                                <md-icon class="material-icons">attachment</md-icon>
+                            </md-button>
+                            <md-menu-content>
+                                <md-menu-item ng-repeat="artifact in $ctrl.test.artifactsToShow">
+                                    <md-button href="{{artifact.link}}" class="artifact-button"
+                                        target="blank" name="artifact">{{artifact.name}}</md-button>
+                                </md-menu-item>
+                            </md-menu-content>
+                        </md-menu>
+                    </md-menu-item>
+                    <md-menu-item>
+                        <md-button name="testDetails" aria-label="Test details" class="md-icon-button"
+                            ng-click="$ctrl.showDetailsDialog($ctrl.test, $event);">
+                            <md-icon class="material-icons">bug_report</md-icon>
+                            <p>bug</p>
+                        </md-button>
+                    </md-menu-item>
+                    <md-menu-item>
+                        <md-button class="md-icon-button" ng-click="$ctrl.storescope($ctrl.test.id);"
+                            ng-href="#!/tests/runs/{{ $ctrl.id }}/info/{{ $ctrl.test.id }}">
+                            <md-icon class="material-icons">remove_red_eye</md-icon>
+                        </md-button>
+                    </md-menu-item>
+                </md-menu-content>
+            </md-menu>
+            <div data-ng-show="$ctrl.test.artifactsToShow.length" class="test-settings__button">
+                <md-menu>
+                    <md-button name="testArtifacts" aria-label="Test artifacts" class="md-icon-button"
+                        ng-click="$mdMenu.open($event);">
+                        <md-icon class="material-icons">attachment</md-icon>
+                    </md-button>
+                    <md-menu-content>
+                        <md-menu-item ng-repeat="artifact in $ctrl.test.artifactsToShow">
+                            <md-button href="{{artifact.link}}" class="artifact-button"
+                                target="blank" name="artifact">{{artifact.name}}</md-button>
+                        </md-menu-item>
+                    </md-menu-content>
+                </md-menu>
+            </div>
+            <div class="test-settings__button">
+                <md-button name="testDetails" aria-label="Test details" class="md-icon-button"
+                    ng-click="$ctrl.showDetailsDialog($ctrl.test, $event);">
+                    <md-icon class="material-icons">bug_report</md-icon>
+                </md-button>
+            </div>
+            <div class="test-settings__button">
+                <md-button class="md-icon-button" ng-click="$ctrl.storescope($ctrl.test.id);"
+                    ng-href="#!/tests/runs/{{ $ctrl.testRun.id }}/info/{{ $ctrl.test.id }}">
+                    <md-icon class="material-icons">remove_red_eye</md-icon>
+                </md-button>
+            </div>
+        </div>
+    </div>
+</div>
