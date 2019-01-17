@@ -49,7 +49,7 @@
                     onTestRunDelete: onTestRunDelete,
                     checkFilePresence: checkFilePresence,
                     downloadApplication: downloadApplication,
-                    selectTest: selectTest,
+                    goToTestRun: goToTestRun,
                 };
 
                 vm.$onInit = init;
@@ -71,9 +71,6 @@
                     }
                 }
 
-                function selectTest() {
-                    console.log("here")
-                }
                 function initSlackAvailability() {
                     if (testsRunsService.isSlackAvailabilityFetched()) {
                         vm.isSlackAvailable = testsRunsService.getSlackAvailability();
@@ -111,6 +108,10 @@
                     const url = $state.href('tests/run', {testRunId: vm.testRun.id});
 
                     window.open(url,'_blank');
+                }
+
+                function goToTestRun() {
+                    $state.go('tests/run', {testRunId: vm.testRun.id, testRun: vm.testRun});
                 }
 
                 function copyLink() {
@@ -450,7 +451,8 @@
                             UtilService.showDeleteMessage(messageData, [id], [], []);
                             if (rs.success) {
                                 $timeout(function() {
-                                    $state.go('tests/runs', {}, {reload: true});
+                                    testsRunsService.clearDataCache();
+                                    $state.go('tests/runs');
                                 }, 1000);
                             }
                         });

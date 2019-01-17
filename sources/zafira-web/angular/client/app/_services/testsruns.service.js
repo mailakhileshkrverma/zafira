@@ -52,6 +52,7 @@
             getSlackAvailability: getSlackAvailability,
             isSlackAvailabilityFetched: isSlackAvailabilityFetched,
             fetchSlackAvailability: fetchSlackAvailability,
+            clearDataCache: clearDataCache,
         };
 
         function getSearchTypes() {
@@ -281,6 +282,10 @@
             });
 
             return defer.promise;
+        }
+
+        function clearDataCache() {
+            _lastResult = null;
         }
     }
 })();
