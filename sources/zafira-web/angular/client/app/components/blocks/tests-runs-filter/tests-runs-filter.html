@@ -8,57 +8,60 @@
                     data-ng-click="$ctrl.toggleMobileSearch();">
                 <md-icon class="material-icons">close</md-icon>
             </button>
-            <button ng-if="$ctrl.matchMode(['APPLY', 'SEARCH'])" id="reset" class="filter-reset-btn md-button md-raised md-warn md-ink-ripple pull-right" type="button" ng-click="$ctrl.onReset();">
+            <button ng-if="$ctrl.matchMode(['APPLY', 'SEARCH'])" id="reset" class="filter-reset-btn md-button md-raised md-warn md-ink-ripple pull-right"
+                type="button" ng-click="$ctrl.onReset();">
                 <span>RESET</span>
             </button>
-            <button ng-if="$ctrl.matchMode(['SEARCH']);" id="applySearch" class="md-button md-raised md-primary md-ink-ripple pull-right" type="button" ng-click="$ctrl.onApply();">
+            <button ng-if="$ctrl.matchMode(['SEARCH']);" id="applySearch" class="md-button md-raised md-primary md-ink-ripple pull-right"
+                type="button" ng-click="$ctrl.onApply();">
                 <span>APPLY</span>
             </button>
-            <button ng-if="$ctrl.matchMode(['CREATE'])" id="createFilter" class="md-button md-raised md-primary md-ink-ripple pull-right" type="button" ng-click="$ctrl.createFilter();" data-ng-disabled="filter_form.$invalid">
+            <button ng-if="$ctrl.matchMode(['CREATE'])" id="createFilter" class="md-button md-raised md-primary md-ink-ripple pull-right"
+                type="button" ng-click="$ctrl.createFilter();" data-ng-disabled="filter_form.$invalid">
                 <span>CREATE</span>
             </button>
-            <button ng-if="$ctrl.matchMode(['UPDATE'])" id="updateFilter" class="md-button md-raised md-primary md-ink-ripple pull-right" type="button" ng-click="$ctrl.updateFilter();" data-ng-disabled="filter_form.$invalid">
+            <button ng-if="$ctrl.matchMode(['UPDATE'])" id="updateFilter" class="md-button md-raised md-primary md-ink-ripple pull-right"
+                type="button" ng-click="$ctrl.updateFilter();" data-ng-disabled="filter_form.$invalid">
                 <span>SAVE</span>
             </button>
-            <button ng-if="$ctrl.matchMode(['CREATE', 'UPDATE'])" id="resetFilter" class="md-button md-default md-ink-ripple pull-right" type="button" ng-click="$ctrl.clearAndOpenFilterBlock(false);">
+            <button ng-if="$ctrl.matchMode(['CREATE', 'UPDATE'])" id="resetFilter" class="md-button md-default md-ink-ripple pull-right"
+                type="button" ng-click="$ctrl.clearAndOpenFilterBlock(false);">
                 <span>CANCEL</span>
             </button>
-            <button ng-if="$ctrl.matchMode(['UPDATE'])" id="deleteFilter" class="md-button md-raised md-warn md-ink-ripple pull-right" type="button" data-ng-really-message="Do you really want to delete the filter?" data-ng-really-click="$ctrl.deleteFilter($ctrl.filter.id);">
+            <button ng-if="$ctrl.matchMode(['UPDATE'])" id="deleteFilter" class="md-button md-raised md-warn md-ink-ripple pull-right"
+                type="button" data-ng-really-message="Do you really want to delete the filter?" data-ng-really-click="$ctrl.deleteFilter($ctrl.filter.id);">
                 <span>DELETE</span>
             </button>
         </div>
 
         <div class="search-filter-body col-md-12 no-padding">
-            <md-card md-table zafira-background-theme="table" class="no-margin-h _md">
-                <div id="filter" class="md-row tests-runs-filter__wrapper" ng-class="{'non-empty-filters': $ctrl.filters.length && $ctrl.isMobile() && !$ctrl.isSearchActive()}">
-                    <div class="md-row tests-runs-filter__wrapper-panel-body no-padding-t" ng-if="!$ctrl.isMobile()">
-                        <div ng-class="{'disable-layer': $ctrl.isSearchActive()}" ng-if="!$ctrl.isMobile()"></div>
-                        <div layout="row" layout-xs="column" ng-show="$ctrl.filterBlockExpand">
-                            <div class="manage-chip" ng-click="$ctrl.clearAndOpenFilterBlock(true);">
-                                <md-chips class="filter-chip">
-                                    <md-chip>
-                                        <div>
-                                            <md-icon class="material-icons">add</md-icon>
-                                        </div>
-                                        <span>New filter</span>
-                                    </md-chip>
-                                </md-chips>
-                            </div>
-                            <md-chips class="filter-chip custom-filter" ng-model="$ctrl.filters" md-removable="false" readonly="true">
-                                <!--TODO: for what this empty disabled input-->
-                                <input disabled>
-                                <md-chip-template>
-                                    <div style="display: inline-block;"
-                                            ng-init="$ctrl.chipsCtrl = $mdChipsCtrl"
-                                            ng-click="$ctrl.searchByFilter($chip, $index)">
-                                        <span>{{$chip.name}}</span>
+            <div id="filter" class="md-row tests-runs-filter__wrapper" ng-class="{'non-empty-filters': $ctrl.filters.length && $ctrl.isMobile() && !$ctrl.isSearchActive()}">
+                <div class="md-row tests-runs-filter__wrapper-panel-body no-padding-t" ng-if="!$ctrl.isMobile()">
+                    <div ng-class="{'disable-layer': $ctrl.isSearchActive()}" ng-if="!$ctrl.isMobile()"></div>
+                    <div layout="row" layout-xs="column" ng-show="$ctrl.filterBlockExpand">
+                        <div class="manage-chip" ng-click="$ctrl.clearAndOpenFilterBlock(true);">
+                            <md-chips class="filter-chip">
+                                <md-chip>
+                                    <div>
+                                        <md-icon class="material-icons">add</md-icon>
                                     </div>
-                                    <div is-owner="{{ $chip.userId }}" user="{{ $ctrl.currentUser }}" style="display: inline-block; vertical-align: sub;">
-                                        <i class="material-icons custom-chip-action show-icon-on-hover" ng-click="$ctrl.selectFilterForEdit($chip);">edit</i>
-                                    </div>
-                                </md-chip-template>
+                                    <span>New filter</span>
+                                </md-chip>
                             </md-chips>
                         </div>
+                        <md-chips class="filter-chip custom-filter" ng-model="$ctrl.filters" md-removable="false"
+                            readonly="true">
+                            <!--TODO: for what this empty disabled input-->
+                            <input disabled>
+                            <md-chip-template>
+                                <div style="display: inline-block;" ng-init="$ctrl.chipsCtrl = $mdChipsCtrl" ng-click="$ctrl.searchByFilter($chip, $index)">
+                                    <span>{{$chip.name}}</span>
+                                </div>
+                                <div is-owner="{{ $chip.userId }}" user="{{ $ctrl.currentUser }}" style="display: inline-block; vertical-align: sub;">
+                                    <i class="material-icons custom-chip-action show-icon-on-hover" ng-click="$ctrl.selectFilterForEdit($chip);">edit</i>
+                                </div>
+                            </md-chip-template>
+                        </md-chips>
                     </div>
                     <div id="filter-editor" class="tests-runs-filter__editor" ng-if=" !$ctrl.isMobile()" ng-show="$ctrl.collapseFilter && $ctrl.filterBlockExpand">
                         <div ng-class="{'disable-layer': $ctrl.isSearchActive()}"></div>
@@ -76,97 +79,122 @@
                                         <span ng-if="!$ctrl.filter.publicAccess">Private</span>
                                     </md-switch>
                                 </div>
-                            </form>
-                            <div layout="row" layout-xs="column">
-                                <div class="filter-select" layout-sm="column" layout-xs="column" flex="none">
-                                    <div layout-sm="row" layout-xs="column">
-                                        <md-input-container class="filter-input-container select">
-                                            <md-select id="filterCriteria" ng-change="$ctrl.onFilterSliceUpdate('CRITERIA');" ng-model="$ctrl.currentCriteria.value" name="criteria" placeholder="CRITERIA">
-                                                <md-option ng-value>
-                                                    <em>None</em>
-                                                </md-option>
-                                                <md-option class="filter-option" ng-repeat="criteria in $ctrl.subjectBuilder.criterias | orderBy:'name'" ng-value="criteria">
-                                                    {{ criteria.name.split('_').join(' ') | lowercase }}
-                                                </md-option>
-                                            </md-select>
-                                        </md-input-container>
-                                        <md-input-container class="filter-input-container select">
-                                            <md-select id="filterOperator" ng-change="$ctrl.onFilterSliceUpdate('OPERATOR');" ng-disabled="!$ctrl.currentCriteria.value" ng-model="$ctrl.currentOperator.value" name="operator" placeholder="OPERATOR">
-                                                <md-option ng-value>
-                                                    <em>None</em>
-                                                </md-option>
-                                                <md-option class="filter-option" ng-repeat="op in $ctrl.currentCriteria.value.operators" ng-value="op">
-                                                    {{ op.split('_').join(' ') | lowercase }}
-                                                </md-option>
-                                            </md-select>
-                                        </md-input-container>
-                                    </div>
-                                    <div layout="row">
-                                        <md-input-container class="filter-input-container select value-input" ng-if="$ctrl.currentCriteria.type.indexOf('SELECT') >= 0">
-                                            <md-select ng-change="$ctrl.onFilterSliceUpdate('VALUE');" ng-disabled="!$ctrl.currentOperator.value"
-                                                        ng-model="$ctrl.currentValue.value.value" name="value" placeholder="Value">
-                                                <md-option ng-value>
-                                                    <em>None</em>
-                                                </md-option>
-                                                <md-option class="filter-option" ng-repeat="value in $ctrl.currentCriteria.value.values" ng-value="value">
-                                                    {{ value.split('_').join(' ') | lowercase }}
-                                                </md-option>
-                                            </md-select>
-                                        </md-input-container>
-                                        <div ng-if="$ctrl.currentOperator.type.indexOf('DATE') >= 0 || (!$ctrl.currentCriteria.type.length && !$ctrl.currentOperator.type.length)" class="filter-input-container value-input">
-                                            <input type="text" class="form-control" placeholder="Value" ng-disabled="!$ctrl.currentOperator.value"
-                                                    ng-change="$ctrl.onFilterSliceUpdate('VALUE');" ng-model="$ctrl.currentValue.value" ng-if="!$ctrl.currentCriteria.type.length && !$ctrl.currentOperator.type.length"/>
-                                            <div ng-if="$ctrl.currentOperator.type.indexOf('DATE') >= 0">
-                                                <md-input-container class="date-picker-container no-padding filter-date pull-left no-margin" flex="auto">
-                                                    <span>{{$ctrl.currentValue.value | date : 'dd MMM'}}</span>
-                                                    <i class="material-icons md-18 date-picker-icon">today</i>
-                                                </md-input-container>
-                                                <md-date-range selected-template="TD" ng-model="$ctrl.selectedFilterRange" one-panel="true" auto-confirm="true" show-template="false" md-on-select="selectedDates = $dates; $ctrl.onSelect($dates)"></md-date-range>
-                                            </div>
-                                        </div>
-                                        <button ng-class="{'default-gray': !$ctrl.currentOperator.value || (!$ctrl.currentValue.value && $ctrl.currentCriteria.type.indexOf('DATE') === -1) || (!$ctrl.currentValue.value && $ctrl.currentCriteria.type.indexOf('DATE') >= 0 && $ctrl.currentOperator.type.indexOf('DATE') >= 0)}" ng-disabled="!$ctrl.currentOperator.value || (!$ctrl.currentValue.value && $ctrl.currentCriteria.type.indexOf('DATE') === -1) || (!$ctrl.currentValue.value && $ctrl.currentCriteria.type.indexOf('DATE') >= 0 && $ctrl.currentOperator.type.indexOf('DATE') >= 0)" ng-click="$ctrl.addChip()" id="add-button" class="quadro-btn default-gray">+</button>
-                                    </div>
+                                <div class="flex-auto" layout-xs="column">
+                                    <input id="filterDescription" type="text" class="form-control" placeholder="Description"
+                                        ng-model="$ctrl.filter.description" required />
                                 </div>
+                                <md-switch id="filterState" has-any-role="['ROLE_ADMIN']" ng-model="$ctrl.filter.publicAccess"
+                                    class="md-primary" aria-label="public access">
+                                    <span ng-if="$ctrl.filter.publicAccess">Public</span>
+                                    <span ng-if="!$ctrl.filter.publicAccess">Private</span>
+                                </md-switch>
+                            </div>
+                        </form>
+                        <div layout="row" layout-xs="column">
+                            <div class="filter-select" layout-sm="column" layout-xs="column" flex="none">
                                 <div layout-sm="row" layout-xs="column">
-                                    <md-chips class="filter-chip filter-chip-scope" ng-model="$ctrl.filter.subject.criterias" readonly="false" md-on-add="$ctrl.changeChip($chip)">
-                                        <input disabled>
-                                        <md-chip-template>
-                                                <span>
-                                                <strong>{{$chip.name.split('_').join(' ') | lowercase}}</strong>
-                                                <span class="chip-operator">{{ $ctrl.SYMBOLS[$chip.operator] }}</span>
-                                                <span ng-if="$ctrl.DATE_CRITERIAS.indexOf($chip.name) === -1 || $ctrl.DATE_CRITERIAS_PICKER_OPERATORS.indexOf($chip.operator) === -1">'{{ $chip.value }}'</span>
-                                                <span ng-if="$ctrl.DATE_CRITERIAS.indexOf($chip.name) !== -1 && $ctrl.DATE_CRITERIAS_PICKER_OPERATORS.indexOf($chip.operator) !== -1">'{{ $chip.value | date : 'MMM dd yyyy' }}'</span>
-                                                </span>
-                                        </md-chip-template>
-                                        <button md-chip-remove class="md-primary filter-slice-chip-button">
-                                            <md-icon aria-label="Close dialog">close</md-icon>
-                                        </button>
-                                    </md-chips>
+                                    <md-input-container class="filter-input-container select">
+                                        <md-select id="filterCriteria" ng-change="$ctrl.onFilterSliceUpdate('CRITERIA');"
+                                            ng-model="$ctrl.currentCriteria.value" name="criteria" placeholder="CRITERIA">
+                                            <md-option ng-value>
+                                                <em>None</em>
+                                            </md-option>
+                                            <md-option class="filter-option" ng-repeat="criteria in $ctrl.subjectBuilder.criterias | orderBy:'name'"
+                                                ng-value="criteria">
+                                                {{ criteria.name.split('_').join(' ') | lowercase }}
+                                            </md-option>
+                                        </md-select>
+                                    </md-input-container>
+                                    <md-input-container class="filter-input-container select">
+                                        <md-select id="filterOperator" ng-change="$ctrl.onFilterSliceUpdate('OPERATOR');"
+                                            ng-disabled="!$ctrl.currentCriteria.value" ng-model="$ctrl.currentOperator.value"
+                                            name="operator" placeholder="OPERATOR">
+                                            <md-option ng-value>
+                                                <em>None</em>
+                                            </md-option>
+                                            <md-option class="filter-option" ng-repeat="op in $ctrl.currentCriteria.value.operators"
+                                                ng-value="op">
+                                                {{ op.split('_').join(' ') | lowercase }}
+                                            </md-option>
+                                        </md-select>
+                                    </md-input-container>
+                                </div>
+                                <div layout="row">
+                                    <md-input-container class="filter-input-container select value-input" ng-if="$ctrl.currentCriteria.type.indexOf('SELECT') >= 0">
+                                        <md-select ng-change="$ctrl.onFilterSliceUpdate('VALUE');" ng-disabled="!$ctrl.currentOperator.value"
+                                            ng-model="$ctrl.currentValue.value.value" name="value" placeholder="Value">
+                                            <md-option ng-value>
+                                                <em>None</em>
+                                            </md-option>
+                                            <md-option class="filter-option" ng-repeat="value in $ctrl.currentCriteria.value.values"
+                                                ng-value="value">
+                                                {{ value.split('_').join(' ') | lowercase }}
+                                            </md-option>
+                                        </md-select>
+                                    </md-input-container>
+                                    <div ng-if="$ctrl.currentOperator.type.indexOf('DATE') >= 0 || (!$ctrl.currentCriteria.type.length && !$ctrl.currentOperator.type.length)"
+                                        class="filter-input-container value-input">
+                                        <input type="text" class="form-control" placeholder="Value" ng-disabled="!$ctrl.currentOperator.value"
+                                            ng-change="$ctrl.onFilterSliceUpdate('VALUE');" ng-model="$ctrl.currentValue.value"
+                                            ng-if="!$ctrl.currentCriteria.type.length && !$ctrl.currentOperator.type.length" />
+                                        <div ng-if="$ctrl.currentOperator.type.indexOf('DATE') >= 0">
+                                            <md-input-container class="date-picker-container no-padding filter-date pull-left no-margin"
+                                                flex="auto">
+                                                <span>{{$ctrl.currentValue.value | date : 'dd MMM'}}</span>
+                                                <i class="material-icons md-18 date-picker-icon">today</i>
+                                            </md-input-container>
+                                            <md-date-range selected-template="TD" ng-model="$ctrl.selectedFilterRange"
+                                                one-panel="true" auto-confirm="true" show-template="false" md-on-select="selectedDates = $dates; $ctrl.onSelect($dates)"></md-date-range>
+                                        </div>
+                                    </div>
+                                    <button ng-class="{'default-gray': !$ctrl.currentOperator.value || (!$ctrl.currentValue.value && $ctrl.currentCriteria.type.indexOf('DATE') === -1) || (!$ctrl.currentValue.value && $ctrl.currentCriteria.type.indexOf('DATE') >= 0 && $ctrl.currentOperator.type.indexOf('DATE') >= 0)}"
+                                        ng-disabled="!$ctrl.currentOperator.value || (!$ctrl.currentValue.value && $ctrl.currentCriteria.type.indexOf('DATE') === -1) || (!$ctrl.currentValue.value && $ctrl.currentCriteria.type.indexOf('DATE') >= 0 && $ctrl.currentOperator.type.indexOf('DATE') >= 0)"
+                                        ng-click="$ctrl.addChip()" id="add-button" class="quadro-btn default-gray">+</button>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                    <div id="filter-mobile"  ng-if="$ctrl.isMobile() && $ctrl.filters.length" ng-hide="$ctrl.isMobileSearchActive || $ctrl.isSearchActive()" class="md-row tests-runs-filter__filter-mobile">
-                        <div class="tests-runs-filter__wrapper-panel-body no-padding-t">
-                            <div layout="row" layout-xs="column" ng-show="$ctrl.filterBlockExpand">
-                                <md-chips class="filter-chip custom-filter" ng-model="$ctrl.filters" md-removable="false" readonly="true">
+                            <div layout-sm="row" layout-xs="column">
+                                <md-chips class="filter-chip filter-chip-scope" ng-model="$ctrl.filter.subject.criterias"
+                                    readonly="false" md-on-add="$ctrl.changeChip($chip)">
+                                    <input disabled>
                                     <md-chip-template>
-                                        <div style="display: inline-block;"
-                                             ng-init="$ctrl.chipsCtrl = $mdChipsCtrl"
-                                             ng-click="$ctrl.searchByFilter($chip, $index)">
-                                            <span>{{$chip.name}}</span>
-                                        </div>
-                                        <div is-owner="{{ $chip.userId }}" user="{{ currentUser }}" style="display: inline-block; vertical-align: sub;">
-                                            <i class="material-icons custom-chip-action show-icon-on-hover" ng-click="$ctrl.chooseFilter($chip);">edit</i>
-                                        </div>
+                                        <span>
+                                            <strong>{{$chip.name.split('_').join(' ') | lowercase}}</strong>
+                                            <span class="chip-operator">{{ $ctrl.SYMBOLS[$chip.operator] }}</span>
+                                            <span ng-if="$ctrl.DATE_CRITERIAS.indexOf($chip.name) === -1 || $ctrl.DATE_CRITERIAS_PICKER_OPERATORS.indexOf($chip.operator) === -1">'{{
+                                                $chip.value }}'</span>
+                                            <span ng-if="$ctrl.DATE_CRITERIAS.indexOf($chip.name) !== -1 && $ctrl.DATE_CRITERIAS_PICKER_OPERATORS.indexOf($chip.operator) !== -1">'{{
+                                                $chip.value | date : 'MMM dd yyyy' }}'</span>
+                                        </span>
                                     </md-chip-template>
+                                    <button md-chip-remove class="md-primary filter-slice-chip-button">
+                                        <md-icon aria-label="Close dialog">close</md-icon>
+                                    </button>
                                 </md-chips>
                             </div>
                         </div>
                     </div>
-                    <md-divider ng-if="!$ctrl.isMobile()"></md-divider>
                 </div>
-            </md-card>
+                <div id="filter-mobile" ng-if="$ctrl.isMobile() && $ctrl.filters.length" ng-hide="$ctrl.isMobileSearchActive || $ctrl.isSearchActive()"
+                    class="md-row tests-runs-filter__filter-mobile">
+                    <div class="tests-runs-filter__wrapper-panel-body no-padding-t">
+                        <div layout="row" layout-xs="column" ng-show="$ctrl.filterBlockExpand">
+                            <md-chips class="filter-chip custom-filter" ng-model="$ctrl.filters" md-removable="false"
+                                readonly="true">
+                                <md-chip-template>
+                                    <div style="display: inline-block;" ng-init="$ctrl.chipsCtrl = $mdChipsCtrl"
+                                        ng-click="$ctrl.searchByFilter($chip, $index)">
+                                        <span>{{$chip.name}}</span>
+                                    </div>
+                                    <div is-owner="{{ $chip.userId }}" user="{{ currentUser }}" style="display: inline-block; vertical-align: sub;">
+                                        <i class="material-icons custom-chip-action show-icon-on-hover" ng-click="$ctrl.chooseFilter($chip);">edit</i>
+                                    </div>
+                                </md-chip-template>
+                            </md-chips>
+                        </div>
+                    </div>
+                </div>
+                <md-divider ng-if="!$ctrl.isMobile()"></md-divider>
+            </div>
         </div>
     </div>
     <div class="tests-runs-filter__modal-bg" ng-if="$ctrl.isMobileSearchActive"></div>

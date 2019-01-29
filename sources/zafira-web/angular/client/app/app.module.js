@@ -25,7 +25,6 @@
         ,'app.testRunCard'
         ,'app.testsRunsFilter'
         ,'app.testsRunsSearch'
-        ,'app.testsRunsButtons'
         // 3rd party feature modules
         ,'ngImgCrop'
         ,'ngecharts'

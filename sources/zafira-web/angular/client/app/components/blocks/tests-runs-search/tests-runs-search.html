@@ -18,8 +18,11 @@
             <div id="search-select" class="tests-runs-filter__search-select" layout="row" layout-md="column" layout-sm="column"
                 layout-xs="column">
                 <div ng-class="{'disable-layer': $ctrl.isFilterActive()}"></div>
-                <div id="search-container" flex="auto">
-                    <div layout="row" layout-xs="column">
+                <div id="search-container" flex="auto" layout="row">
+                    <md-checkbox name="testRunCheckbox" class="md-primary" aria-label="Select" data-ng-model="$ctrl.testRun.selected"
+                                data-ng-if="$ctrl.testRun.selected || $ctrl.testRun.status !== 'IN_PROGRESS'"
+                                data-ng-true-value="true" data-ng-false-value="false"></md-checkbox>
+                    <div layout="row" flex="auto" layout-xs="column">
                         <input type="text" id="search-input" ng-if="!$ctrl.isMobile()" class="form-control pull-left"
                             placeholder="Search items" ng-model="$ctrl.fastSearch[$ctrl.getActiveSearchType()]"
                             ng-change="$ctrl.onSearchChange()" ng-model-options="{debounce: 200}" aria-label="Search items"

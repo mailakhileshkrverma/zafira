@@ -101,6 +101,16 @@
                     align-items: center
                 }
             }
+            md-checkbox {
+                margin-bottom: 0;
+                min-width: 18px;
+                min-height: 18px;
+                margin: 0 8px 0 4px;
+                .md-container, .md-icon {
+                    width: 18px;
+                    height: 18px;
+                }
+            }
             .reviewed {
                 background-color: rgba(31, 36, 42, .1);
                 color: #35393f ;
@@ -130,6 +140,7 @@
                     }
                     md-select-value {
                         padding: 0;
+                        border-bottom: transparent;
                         .md-select-icon:after {
                             font-size: 15px !important;
                         }
