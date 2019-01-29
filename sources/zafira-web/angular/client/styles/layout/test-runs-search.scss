@@ -59,14 +59,20 @@
                         margin-top: 2px;
                         height: 36px;
                         padding: 0 0 0 12px;
-                    }
-                    md-select-value {
-                        padding: 0;
-                        border-bottom: transparent;
-                        .md-select-icon:after {
-                            font-size: 15px !important;
+                        md-select-value {
+                            padding: 0;
+                            border-bottom: transparent;
+                            .md-select-icon:after {
+                                font-size: 15px !important;
+                            }
+                        }
+                        &:focus {
+                            md-select-value {
+                                border-bottom: transparent;
+                            }
                         }
                     }
+                    
                     &._additional {
                         margin-bottom: 20px;
                         & md-input-container {
