@@ -37,7 +37,7 @@
             padding-top: 48px;
         }
         &-panel-body {   
-            padding: 16px;
+            padding: 16px 0 16px 0;
             position: relative;   
             @extend %chips-scrolling;
             .manage-chip {
@@ -265,6 +265,7 @@
             }
         }
     }
+    
     @media screen and (max-width: $breakpoint-mobile) {
         &__filter-mobile {
             background-color: #fff;
@@ -307,51 +308,6 @@
             }
         }
 
-        &__search {
-            &-panel {
-                &._row-wrapper {
-                    overflow: hidden;
-                    display: flex;
-                    align-items: center;
-                    border-bottom: 1px solid rgba(0,0,0,0.12);
-                }
-            }
-            &-select {
-                position: absolute;
-                z-index: 4;
-                background-color: #fff;
-                left: 0;
-                top: 63px;
-                border-bottom-left-radius: 10px;
-                border-bottom-right-radius: 10px;
-                box-shadow: 0px 4px 8px 0 rgba(0, 0, 0, 0.2);
-                .reviewed {
-                    margin-right: 16px;
-                }
-                & .search {
-                    &-fields {
-                        & .searchable.select {
-                            margin-bottom: 16px !important;
-                        }
-                        &._main {
-                            padding-top: 15px;
-                        }
-                    }
-                }
-                & .btn-check {
-                    width: auto;
-                    margin: 0 14px;
-                    padding: 2px;
-                    display: flex;
-                    justify-content: space-between;
-                    border-bottom: 1px rgba(0, 0, 0, 0.10) solid;
-                    & button.btn {
-                        min-width: 85px;
-                        margin-bottom: 14px;
-                    }
-                }
-            }
-        }
         &__actions {
             height: 48px;
             background-color: #fff;
@@ -385,38 +341,6 @@
             right: 0;
             z-index: 3;
             background-color: rgba(0, 0, 0, 0.25);
-        }
-    }
-
-    @media screen and (min-width: $breakpoint-mobile + 1) {
-        &__search {
-            &-select {
-                & #search-input {
-                    padding-right: 300px;
-                }
-                & .search {
-                    &-fields {
-                        padding: 0;
-                        &._additional {
-                            margin-bottom: 0;
-                            padding: 0;
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
-%select {
-    border-radius: 4px;
-    border: 1px solid ;
-    font-size: 14px !important;
-    #search & {
-        height: 40px !important;
-        border-color: rgba(0, 0, 0, 0.25) !important;
-        &:hover {
-            border-color: rgba(0, 0, 0, 0.35) !important;
         }
     }
 }
