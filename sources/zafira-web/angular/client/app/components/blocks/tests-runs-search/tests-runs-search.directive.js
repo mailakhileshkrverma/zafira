@@ -59,7 +59,7 @@
                 $rootScope.$on('tr-filter-reset', onReset);
                 $rootScope.$on('tr-filter-apply', onApply);
                 $rootScope.$on('tr-filter-open-search', toggleMobileSearch);
-                $rootScope.$on('tr-filter-close', toggleMobileSearch)
+                $rootScope.$on('tr-filter-close', toggleMobileSearch);
             }
         }
 
