@@ -19,9 +19,7 @@
                 layout-xs="column">
                 <div ng-class="{'disable-layer': $ctrl.isFilterActive()}"></div>
                 <div id="search-container" flex="auto" layout="row">
-                    <md-checkbox name="testRunCheckbox" class="md-primary" aria-label="Select" data-ng-model="$ctrl.testRun.selected"
-                                data-ng-if="$ctrl.testRun.selected || $ctrl.testRun.status !== 'IN_PROGRESS'"
-                                data-ng-true-value="true" data-ng-false-value="false"></md-checkbox>
+                    <md-checkbox name="testRunCheckbox" class="md-primary" aria-label="Select" data-ng-true-value="true" data-ng-false-value="false"></md-checkbox>
                     <div layout="row" flex="auto" layout-xs="column">
                         <input type="text" id="search-input" ng-if="!$ctrl.isMobile()" class="form-control pull-left"
                             placeholder="Search items" ng-model="$ctrl.fastSearch[$ctrl.getActiveSearchType()]"
@@ -70,8 +68,7 @@
                     <div layout="row" class="search-fields _additional">
                         <md-input-container class="date-picker-container pull-left" flex="grow">
                             <span data-ng-if="!$ctrl.selectedRange.dateStart && !$ctrl.selectedRange.dateEnd"></span>
-                            <span data-ng-if="$ctrl.selectedRange.dateStart && $ctrl.selectedRange.dateEnd && !$ctrl.isEqualDate()">{{$ctrl.selectedRange.dateStart
-                                | date : 'dd MMM'}} - </span>
+                            <span data-ng-if="$ctrl.selectedRange.dateStart && $ctrl.selectedRange.dateEnd && !$ctrl.isEqualDate()">{{$ctrl.selectedRange.dateStart | date : 'dd MMM'}} - </span>
                             <span>{{$ctrl.selectedRange.dateEnd | date : 'dd MMM'}}</span>
                             <md-button id="searchCalendar" ng-click="$ctrl.openDatePicker($event, true)">
                                 <i class="material-icons">date_range</i>

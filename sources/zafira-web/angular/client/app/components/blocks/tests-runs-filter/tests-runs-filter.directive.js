@@ -18,7 +18,7 @@
 
     function TestsRunsFilterController(FilterService, DEFAULT_SC, TestRunService, $q, ProjectService,
                                        testsRunsService, $cookieStore, UserService, $timeout, $mdDateRangePicker,
-                                       windowWidthService, $rootScope) {
+                                       windowWidthService, $rootScope, $scope) {
         const subjectName = 'TEST_RUN';
         const DEFAULT_FILTER_VALUE = {
             subject: {
@@ -50,7 +50,6 @@
             filter: angular.copy(DEFAULT_FILTER_VALUE),
             filters: [],
             filterBlockExpand: false,
-            fastSearchBlockExpand: false,
             fastSearch: {},
             collapseFilter: false,
             isFilterActive: testsRunsService.isFilterActive,
@@ -85,7 +84,6 @@
             getActiveSearchType: testsRunsService.getActiveSearchType,
             onSearchChange: onSearchChange,
             onChangeSearchCriteria: onChangeSearchCriteria,
-            openDatePicker: openDatePicker,
             toggleMobileSearch: toggleMobileSearch,
         };
 
@@ -95,7 +93,6 @@
 
         function init() {
             vm.filterBlockExpand = true;
-            vm.fastSearchBlockExpand = true;
             loadFilters();
             loadPublicFilters().then(function() {
                 $timeout(function() {
@@ -114,7 +111,7 @@
             if (vm.isMobile()) {
                 $rootScope.$on('tr-filter-reset', onReset);
                 $rootScope.$on('tr-filter-apply', onApply);
-                $rootScope.$on('tr-filter-open-search', toggleMobileSearch);
+                $scope.$on('tr-filter-open-search', toggleMobileSearch);
             }
         }
 
@@ -138,6 +135,8 @@
 
         function toggleMobileSearch() {
             vm.isMobileSearchActive = !vm.isMobileSearchActive;
+            if(!vm.isMobileSearchActive)
+                $rootScope.$emit('tr-filter-close');
         }
 
         function loadFilters() {
@@ -402,37 +401,6 @@
                     testsRunsService.deleteSearchParam(type);
                 }
             });
-        }
-
-        function openDatePicker($event, showTemplate) {
-            if (vm.isFilterActive()) { return; }
-
-            vm.selectedRange.showTemplate = showTemplate;
-
-            $mdDateRangePicker.show({
-                targetEvent: $event,
-                model: vm.selectedRange
-            })
-            .then(function(result) {
-                if (result) {
-                    const activeFilteringTool = testsRunsService.getActiveFilteringTool();
-
-                    vm.selectedRange = result;
-                    !vm.isSearchActive() && testsRunsService.setActiveFilteringTool('search');
-                    if (vm.selectedRange.dateStart && vm.selectedRange.dateEnd) {
-                        if (vm.selectedRange.dateStart.getTime() !==
-                            vm.selectedRange.dateEnd.getTime()) {
-                            testsRunsService.deleteSearchParam('date');
-                            testsRunsService.setSearchParam('fromDate', vm.selectedRange.dateStart);
-                            testsRunsService.setSearchParam('toDate', vm.selectedRange.dateEnd);
-                        } else {
-                            testsRunsService.deleteSearchParam('fromDate');
-                            testsRunsService.deleteSearchParam('toDate');
-                            testsRunsService.setSearchParam('date', vm.selectedRange.dateStart);
-                        }
-                    }
-                }
-            })
         }
     }
 })();
