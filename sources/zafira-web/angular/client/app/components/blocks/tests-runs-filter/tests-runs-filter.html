@@ -74,21 +74,11 @@
                                     <div class="flex-auto" layout-xs="column">
                                         <input id="filterDescription" type="text" class="form-control" placeholder="Description" ng-model="$ctrl.filter.description" required/>
                                     </div>
-                                    <md-switch id="filterState" class="tests-runs-filter__editor-text-state"has-any-role="['ROLE_ADMIN']" ng-model="$ctrl.filter.publicAccess" class="md-primary" aria-label="public access">
+                                    <md-switch id="filterState" class="tests-runs-filter__editor-text-state md-primary" has-any-role="['ROLE_ADMIN']" ng-model="$ctrl.filter.publicAccess" aria-label="public access">
                                         <span ng-if="$ctrl.filter.publicAccess">Public</span>
                                         <span ng-if="!$ctrl.filter.publicAccess">Private</span>
                                     </md-switch>
                                 </div>
-                                <div class="flex-auto" layout-xs="column">
-                                    <input id="filterDescription" type="text" class="form-control" placeholder="Description"
-                                        ng-model="$ctrl.filter.description" required />
-                                </div>
-                                <md-switch id="filterState" has-any-role="['ROLE_ADMIN']" ng-model="$ctrl.filter.publicAccess"
-                                    class="md-primary" aria-label="public access">
-                                    <span ng-if="$ctrl.filter.publicAccess">Public</span>
-                                    <span ng-if="!$ctrl.filter.publicAccess">Private</span>
-                                </md-switch>
-                            </div>
                         </form>
                         <div layout="row" layout-xs="column">
                             <div class="filter-select" layout-sm="column" layout-xs="column" flex="none">
@@ -174,7 +164,8 @@
                         </div>
                     </div>
                 </div>
-                <div id="filter-mobile" ng-if="$ctrl.isMobile() && $ctrl.filters.length" ng-hide="$ctrl.isMobileSearchActive || $ctrl.isSearchActive()"
+            </div>
+            <div id="filter-mobile" ng-if="$ctrl.isMobile() && $ctrl.filters.length" ng-hide="$ctrl.isMobileSearchActive || $ctrl.isSearchActive()"
                     class="md-row tests-runs-filter__filter-mobile">
                     <div class="tests-runs-filter__wrapper-panel-body no-padding-t">
                         <div layout="row" layout-xs="column" ng-show="$ctrl.filterBlockExpand">
@@ -193,7 +184,6 @@
                         </div>
                     </div>
                 </div>
-            </div>
         </div>
     </div>
     <div class="tests-runs-filter__modal-bg" ng-if="$ctrl.isMobileSearchActive"></div>

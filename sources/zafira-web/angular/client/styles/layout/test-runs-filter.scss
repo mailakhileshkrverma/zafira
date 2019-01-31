@@ -79,6 +79,7 @@
         &-text {
             vertical-align: top;
             padding-bottom: 16px;
+            
             &-state{
                 padding-left: 9px;
                 margin: 0;
@@ -87,192 +88,6 @@
         }
     }
 
-    &__search {
-        &-panel-body {
-            background-color: white;
-            padding: 18px 20px 14px 20px;
-            @extend %chips-scrolling;
-        }
-        &-panel {
-            margin-bottom: 0 !important;
-            &._row-wrapper {
-                #search-input {
-                    @extend %select; 
-                    padding-left: 37px;
-                }
-            }
-        }
-        &-select {
-            width: 100%;
-            & .row-wrapper {
-                @media screen and (min-width: 960px) {
-                    align-items: center
-                }
-            }
-            md-checkbox {
-                margin-bottom: 0;
-                min-width: 18px;
-                min-height: 18px;
-                margin: 0 8px 0 4px;
-                .md-container, .md-icon {
-                    width: 18px;
-                    height: 18px;
-                }
-            }
-            .reviewed {
-                background-color: rgba(31, 36, 42, .1);
-                color: #35393f ;
-                border: none;
-                &:hover {
-                    background-color: rgba(31, 36, 42, .2);
-                }
-                &.label-primary{
-                    background-color: $green-new;
-                    color: #fff;
-                }
-            }
-            & #search-input {
-                @extend %select;
-            }
-            & .search {
-                &-fields {
-                    padding: 0 16px;
-                    md-input-container {
-                        @extend %select;
-                    }
-                    md-select{
-                        border: none; 
-                        margin-top: 2px;
-                        height: 36px;
-                        padding: 0 0 0 12px;
-                    }
-                    md-select-value {
-                        padding: 0;
-                        border-bottom: transparent;
-                        .md-select-icon:after {
-                            font-size: 15px !important;
-                        }
-                    }
-                    &._additional {
-                        margin-bottom: 20px;
-                        & md-input-container {
-                            @extend %select;
-                            padding-top: 2px !important;
-                            .md-button {
-                                height: 38px;
-                            }
-                        }
-                        & .date-picker-container i {
-                            font-size: 20px;
-                            color: #000 !important;
-                        }
-                    }
-                }
-            }
-            & .btn-check {
-                & button.btn {
-                    outline: none;
-                    font-size: 11px;
-                    font-weight: 500;
-                    max-height: 28px;
-                    border-radius: 14px;
-                    background-color: transparent;
-                    border: 1px solid rgba(0,0,0, .25);
-                    box-shadow: none ;
-                    color: #000;
-                    text-transform: uppercase;
-                    height: 28px;
-                    line-height: 26px;
-                    padding: 7px 14px !important;
-                    margin: 6px 3px;
-                    line-height: 1 !important;
-                    &:hover, &.active, &.default-blue {
-                        background-color: #d3e9e6 !important;
-                        border: 1px solid #d3e9e6 !important;
-                        color: #000 !important;
-                    }
-                }
-            }
-        }
-        .quadro-btn {
-            width: 40px !important;
-            height: 40px !important;
-            min-width: 40px;
-            border-radius: 4px;
-        }
-        &._mobile {
-            &,
-            &#search {
-                background-color: #fff;
-                position: fixed;
-                top: 96px;
-                left: 0;
-                right: 0;
-                z-index: 5;
-                @media (min-width: 481px){ 
-                    left: 60px; 
-                }
-                .tests-runs-filter__search-panel-body {
-                    padding: 0 !important;
-                }
-                md-input-container {
-                    height: 40px !important;
-                    color: #000;
-                    letter-spacing: 0.3px;
-                }
-                #search-input {
-                    margin: 16px 16px 7px;
-                }
-                .search-wrapper {
-                    top: 16px;
-                    left: 16px;
-                }
-            }
-            .search-wrapper {
-                max-width: 40px;
-                max-height: 40px;
-                z-index: 3;
-                position: absolute;
-                left: 16px;
-                top: 7px;
-                i {
-                    display: block;
-                    padding: 0;
-                    color: rgba(0, 0, 0, 0.5) !important;
-                    font-size: 18px;
-                    line-height: 40px;
-                    text-align: center;
-                    width: 40px;
-                    height: 40px;
-                }
-            }
-            .btn-check {
-                position: relative;
-                margin: 0 14px;
-                padding: 2px;
-                display: flex;
-                flex-grow: 1;
-                justify-content: space-between;
-                border-bottom: 1px rgba(0, 0, 0, 0.10) solid;
-                button.btn {
-                    flex-grow: 1;
-                    font-size: 11px;
-                    font-weight: 500;
-                    max-height: 28px;
-                    border-radius: 14px;
-                    background-color: transparent;
-                    border: 1px solid rgba(0, 0, 0, .25);
-                    box-shadow: none;
-                    color: #000;
-                    text-transform: uppercase;
-                    height: 28px;
-                    line-height: 26px;
-                    padding: 0 !important;
-                    outline: none;
-                }
-            }
-        }
-    }
     &__filter-mobile {
         background-color: #fff;
         position: fixed;
@@ -316,6 +131,7 @@
             border-right: 0;
             border-left: 0;
             border-top-color: #fff;
+            
             button {
                 margin: 0 !important;
             }
@@ -323,6 +139,7 @@
                 margin-right: 12px !important;
             }
         }
+        
         &__modal-bg {
             position: fixed;
             top: 48px;
@@ -339,6 +156,7 @@
     md-chips.filter-chip.custom-filter {
         @media screen and (min-width: $breakpoint-mobile + 1) {
             min-width: auto;
+            padding-bottom: 8px;
         }
         @media screen and (max-width: $breakpoint-mobile) {
             overflow-x: scroll;
@@ -348,8 +166,10 @@
                 display: none;
             }
         }
+
         md-chips-wrap.md-chips{
             display: flex !important;
+
             md-chip {
                 background-color: rgba(31, 36, 42, .4) !important;
                 font-size: 13px;

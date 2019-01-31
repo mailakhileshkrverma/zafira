@@ -42,7 +42,7 @@
                 @extend %select;
             }
             
-            & .search {
+            .search {
                 &-fields {
                     padding: 0 16px;
 
@@ -58,7 +58,7 @@
                             background-color: rgba(31, 36, 42, .2);
                         }
 
-                        &.label-primary{
+                        .label-primary{
                             background-color: $green-new;
                             color: #fff;
                         }
@@ -88,18 +88,26 @@
                     }
                     
                     &._additional {
-                        & md-input-container {
+                        md-input-container {
                             @extend %select;
                         }
-                        & .date-picker-container i {
-                            font-size: 20px;
-                            color: #000 !important;
+                        .date-picker-container {
+                            padding-top: 2px !important;
+
+                            button {
+                                min-height: 38px;
+                            }
+
+                            i {
+                                font-size: 20px;
+                                color: #000 !important;
+                            }
                         }
                     }
                 }
             }
-            & .btn-check {
-                & button.btn {
+            .btn-check {
+                button.btn {
                     outline: none;
                     font-size: 11px;
                     font-weight: 500;
@@ -190,9 +198,9 @@
                         margin-right: 16px;
                     }
 
-                    & .search {
+                    .search {
                         &-fields {
-                            & .searchable.select {
+                            .searchable.select {
                                 margin-bottom: 16px !important;
                             }
 
@@ -208,7 +216,7 @@
                 }
             }
 
-            & .btn-check {
+            .btn-check {
                 position: relative;
                 margin: 0;
                 padding: 2px 14px;
@@ -218,7 +226,7 @@
                 border-bottom: 1px rgba(0, 0, 0, 0.10) solid;
                 right: 0;
 
-                & button.btn {
+                button.btn {
                     flex-grow: 1;
                     margin-bottom: 14px;
                 }
@@ -229,11 +237,11 @@
     @media screen and (min-width: $breakpoint-mobile + 1) {
         &__search {
             &-select {
-                & #search-input {
+                #search-input {
                     padding-right: 300px;
                 }
 
-                & .search {
+                .search {
                     &-fields {
                         padding: 0;
 
