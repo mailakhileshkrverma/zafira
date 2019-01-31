@@ -16,7 +16,7 @@
         };
     });
 
-    function TestsRunsSearchController(windowWidthService, testsRunsService, $rootScope, TestRunService, ProjectService, $q, FilterService, $mdDateRangePicker) {
+    function TestsRunsSearchController(windowWidthService, DEFAULT_SC, testsRunsService, $rootScope, TestRunService, ProjectService, $q, FilterService, $mdDateRangePicker) {
         const subjectName = 'TEST_RUN';
         const SELECT_CRITERIAS = ['ENV', 'PLATFORM', 'PROJECT', 'STATUS'];
         const STATUSES = ['PASSED', 'FAILED', 'SKIPPED', 'ABORTED', 'IN_PROGRESS', 'QUEUED', 'UNKNOWN'];
@@ -27,10 +27,8 @@
             fastSearchBlockExpand: false,
             isFilterActive: testsRunsService.isFilterActive,
             isSearchActive: testsRunsService.isSearchActive,
-            toggleMobileSearch: toggleMobileSearch,
-            onReset: onReset,
-            onApply: onApply,
             fastSearch: {},
+            statuses: STATUSES,
             selectedRange: {
                 selectedTemplate: null,
                 selectedTemplateName: null,
@@ -39,13 +37,15 @@
                 showTemplate: false,
                 fullscreen: false
             },
-            statuses: STATUSES,
             getActiveSearchType: testsRunsService.getActiveSearchType,
             onSearchChange: onSearchChange,
             selectSearchType: selectSearchType,
             searchParams: testsRunsService.getLastSearchParams(),
             onChangeSearchCriteria: onChangeSearchCriteria,
             openDatePicker: openDatePicker,
+            toggleMobileSearch: toggleMobileSearch,
+            onReset: onReset,
+            onApply: onApply,
         };
 
         vm.$onInit = init;
@@ -55,11 +55,30 @@
         function init() {
             vm.fastSearchBlockExpand = true;
             loadFilters();
+            readStoredParams();
             if (vm.isMobile()) {
-                $rootScope.$on('tr-filter-reset', onReset);
                 $rootScope.$on('tr-filter-apply', onApply);
                 $rootScope.$on('tr-filter-open-search', toggleMobileSearch);
                 $rootScope.$on('tr-filter-close', toggleMobileSearch);
+            }
+            $rootScope.$on('tr-search-reset', onReset);
+        }
+
+        function readStoredParams() {
+            if (vm.isSearchActive()) {
+                let fromDate = testsRunsService.getSearchParam('fromDate');
+                let toDate = testsRunsService.getSearchParam('toDate');
+                const date = testsRunsService.getSearchParam('date');
+
+                date && (fromDate = toDate = date);
+                fromDate && (vm.selectedRange.dateStart = new Date(fromDate));
+                toDate && (vm.selectedRange.dateEnd = new Date(toDate));
+
+                testsRunsService.getSearchTypes().forEach(function(type) {
+                    const searchValue = testsRunsService.getSearchParam(type);
+
+                    searchValue && (vm.fastSearch[type] = searchValue);
+                });
             }
         }
 

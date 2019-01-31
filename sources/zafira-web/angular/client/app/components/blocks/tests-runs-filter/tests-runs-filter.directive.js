@@ -77,13 +77,9 @@
             updateFilter: updateFilter,
             deleteFilter: deleteFilter,
             clearAndOpenFilterBlock: clearAndOpenFilterBlock,
-            clearAndOpenNewFilterBlock: clearAndOpenNewFilterBlock,
             searchByFilter: searchByFilter,
             selectFilterForEdit: selectFilterForEdit,
-            selectSearchType: selectSearchType,
             getActiveSearchType: testsRunsService.getActiveSearchType,
-            onSearchChange: onSearchChange,
-            onChangeSearchCriteria: onChangeSearchCriteria,
             toggleMobileSearch: toggleMobileSearch,
         };
 
@@ -107,29 +103,10 @@
                     }
                 });
             });
-            readStoredParams();
             if (vm.isMobile()) {
                 $rootScope.$on('tr-filter-reset', onReset);
                 $rootScope.$on('tr-filter-apply', onApply);
                 $scope.$on('tr-filter-open-search', toggleMobileSearch);
-            }
-        }
-
-        function readStoredParams() {
-            if (vm.isSearchActive()) {
-                let fromDate = testsRunsService.getSearchParam('fromDate');
-                let toDate = testsRunsService.getSearchParam('toDate');
-                const date = testsRunsService.getSearchParam('date');
-
-                date && (fromDate = toDate = date);
-                fromDate && (vm.selectedRange.dateStart = new Date(fromDate));
-                toDate && (vm.selectedRange.dateEnd = new Date(toDate));
-
-                testsRunsService.getSearchTypes().forEach(function(type) {
-                    const searchValue = testsRunsService.getSearchParam(type);
-
-                    searchValue && (vm.fastSearch[type] = searchValue);
-                });
             }
         }
 
@@ -274,6 +251,7 @@
             testsRunsService.resetFilteringState();
             vm.onFilterChange();
             vm.chipsCtrl && (delete vm.chipsCtrl.selectedChip);
+            $rootScope.$emit('tr-search-reset');
         }
 
         function onApply() {
@@ -336,10 +314,6 @@
             vm.collapseFilter = value;
         }
 
-        function clearAndOpenNewFilterBlock() {
-            vm.collapseNewFilter = !vm.collapseNewFilter;
-        }
-
         function clearFilterSlice() {
             vm.currentCriteria = angular.copy(CURRENT_CRITERIA);
             vm.currentOperator = angular.copy(CURRENT_OPERATOR);
@@ -366,41 +340,6 @@
                 value: vm.currentValue.value && vm.currentValue.value.value ? vm.currentValue.value.value : vm.currentValue.value
             });
             clearFilterSlice();
-        }
-
-        function selectSearchType(type) {
-            if (vm.getActiveSearchType() === type) { return; }
-
-            testsRunsService.setActiveSearchType(type);
-        }
-
-        function onChangeSearchCriteria(name) {//TODO: refactor this fn and onSearchChange for "DRY"
-            const activeFilteringTool = testsRunsService.getActiveFilteringTool();
-
-            if (!name) { return; }
-            if (activeFilteringTool && activeFilteringTool !== 'search') { return; }
-
-            !activeFilteringTool && testsRunsService.setActiveFilteringTool('search');
-            if (vm.searchParams[name]) {
-                testsRunsService.setSearchParam(name, vm.searchParams[name]);
-            } else {
-                testsRunsService.deleteSearchParam(name);
-            }
-        }
-
-        function onSearchChange() {
-            const activeFilteringTool = testsRunsService.getActiveFilteringTool();
-
-            if (activeFilteringTool && activeFilteringTool !== 'search') { return; }
-
-            !activeFilteringTool && testsRunsService.setActiveFilteringTool('search');
-            testsRunsService.getSearchTypes().forEach(function(type) {
-                if (vm.fastSearch[type]) {
-                    testsRunsService.setSearchParam(type, vm.fastSearch[type]);
-                } else if (testsRunsService.getSearchParam(type)) {
-                    testsRunsService.deleteSearchParam(type);
-                }
-            });
         }
     }
 })();
