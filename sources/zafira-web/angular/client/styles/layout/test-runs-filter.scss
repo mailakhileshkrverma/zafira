@@ -5,6 +5,7 @@
         background-color: #fff;
         border: 0;
     }
+
     &__actions {
         button#reset, 
         button#applySearch,
@@ -20,6 +21,7 @@
             z-index: 4;
             min-width: 80px;
         }
+
         button#reset {
             background-color: $fog-gray;
             color: $dark-coal-new;
@@ -27,21 +29,25 @@
                 background-color: rgba($dark-coal-new, .3);
             }
         }
+
         button#applySearch {
             background-color: $medium-teal-bright-new;
             color: #ffffff;
         } 
     }
+
     &__wrapper {
         &.non-empty-filters {
             padding-top: 48px;
         }
+
         &-panel-body {   
             padding: 16px 0 16px 0;
             position: relative;   
             @extend %chips-scrolling;
+
             .manage-chip {
-                & md-chips.filter-chip md-chips-wrap.md-chips md-chip {
+                md-chips.filter-chip md-chips-wrap.md-chips md-chip {
                     font-size: 13px;
                     color: black !important;
                     background-color: transparent !important;
@@ -49,14 +55,16 @@
                     margin: 0 8px 0 0 !important;
                     width: auto;
                     padding: 0 17px 0 30px !important;
-                    & div {
+
+                    div {
                         width: auto;
                         height: auto;
                         right: auto;  
                         background-color: transparent;
                         left: 9px !important;
                         top: 5px;
-                        & md-icon {
+                        
+                        md-icon {
                             font-size: 15px;
                             width: auto;
                             height: auto;
@@ -265,43 +273,25 @@
             }
         }
     }
+    &__filter-mobile {
+        background-color: #fff;
+        position: fixed;
+        top: 96px;
+        left: 0;
+        right: 0;
+        width: 100%;
+        z-index: 5;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+        height: 48px;
+        border: 1px solid rgba(#1f242a, .1);
+        border-right: 0;
+        border-left: 0;
+        @media (min-width: 481px) { 
+            left: 60px; 
+        }
+    }
     
     @media screen and (max-width: $breakpoint-mobile) {
-        &__filter-mobile {
-            background-color: #fff;
-            position: fixed;
-            top: 96px;
-            left: 0;
-            right: 0;
-            width: 100%;
-            z-index: 5;
-            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-            height: 48px;
-            border: 1px solid rgba(#1f242a, .1);
-            border-right: 0;
-            border-left: 0;
-            @media (min-width: 481px) { 
-                left: 60px; 
-            }
-            &#filter-mobile .panel-body {
-                padding: 10px 12px !important;
-            }
-            md-chip {
-                font-weight: 500;
-                font-size: 11px;
-                max-height: 28px;
-                line-height: 28px;
-                border-radius: 28px;
-                &.md-focused {
-                    background-color: #35393f !important;
-                    & i ,
-                    &:hover i {
-                        display: none !important;
-                    }
-                }
-            }
-        }
-        
         &__wrapper{
             &-panel-body {
                 padding: 10px 12px;
@@ -380,6 +370,7 @@
                 @media screen and (max-width: $breakpoint-mobile) {
                     font-size: 11px;
                     max-height: 28px;
+                    line-height: 28px;
                     &.md-focused {
                         & i ,
                         &:hover i {
