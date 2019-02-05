@@ -327,6 +327,8 @@
                     vm.selectedTestRuns[testRun.id] = testRun;
                 } else {
                     vm.selectedAll = false;
+                    vm.selectAll = false;
+                    
                     delete vm.selectedTestRuns[testRun.id];
                 }
             }, 100);
@@ -334,8 +336,9 @@
 
         function addToSelectedTestRunsAll() {
             vm.selectAll = !vm.selectAll;
+            vm.selectedAll = true;
+
             vm.testRuns.forEach(function(testRun) {
-                vm.selectedAll = true;
                 testRun.selected = vm.selectAll;
                 addToSelectedTestRuns(testRun);
             })
