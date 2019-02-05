@@ -61,12 +61,17 @@
             </md-fab-actions>
         </md-fab-speed-dial>
         <tests-runs-filter on-filter-change="$ctrl.getTestRuns(1)"></tests-runs-filter>
-        <tests-runs-search><span  ng-click="$ctrl.addToSelectedTestRunsAll($event)"><md-checkbox name="testRunCheckbox" 
-                                        data-ng-model="$ctrl.selectedAll"
-                                        class="md-primary" 
-                                        aria-label="Select" 
-                                        data-ng-true-value="true" 
-                                        data-ng-false-value="false"></md-checkbox></span></tests-runs-search>
+        <tests-runs-search>
+            <span ng-click="$ctrl.addToSelectedTestRunsAll($event)">
+                <md-checkbox name="testRunSearchCheckbox" 
+                            data-ng-model="$ctrl.selectedAll"
+                            class="md-primary" 
+                            aria-label="Select" 
+                            data-ng-true-value="true" 
+                            data-ng-false-value="false">
+                </md-checkbox>
+            </span>
+        </tests-runs-search>
         <div class="p-tests-runs__section _content row ui-section no-margin">
             <div class="col-md-12 no-padding">
                 <article class="article">
