@@ -12,7 +12,8 @@
             controllerAs: '$ctrl',
             restrict: 'E',
             replace: true,
-            bindToController: true
+            bindToController: true,
+            transclude:  true,
         };
     });
 

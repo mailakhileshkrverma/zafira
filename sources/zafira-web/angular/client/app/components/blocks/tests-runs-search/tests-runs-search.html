@@ -19,7 +19,7 @@
                 layout-xs="column">
                 <div ng-class="{'disable-layer': $ctrl.isFilterActive()}"></div>
                 <div id="search-container" flex="auto" layout="row">
-                    <md-checkbox name="testRunCheckbox" class="md-primary" aria-label="Select" data-ng-true-value="true" data-ng-false-value="false"></md-checkbox>
+                    <ng-transclude></ng-transclude>
                     <div layout="row" flex="auto" layout-xs="column">
                         <input type="text" id="search-input" ng-if="!$ctrl.isMobile()" class="form-control pull-left"
                             placeholder="Search items" ng-model="$ctrl.fastSearch[$ctrl.getActiveSearchType()]"

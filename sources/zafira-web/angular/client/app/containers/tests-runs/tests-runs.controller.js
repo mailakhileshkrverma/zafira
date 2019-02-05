@@ -29,6 +29,8 @@
                                  windowWidthService, activeTestRunId) {
         let TENANT;
         const vm = {
+            selectAll: false,
+            selectedAll: false,
             testRuns: resolvedTestRuns.results || [],
             totalResults: resolvedTestRuns.totalResults || 0,
             pageSize: resolvedTestRuns.pageSize,
@@ -51,6 +53,7 @@
             batchDelete: batchDelete,
             abortSelectedTestRuns: abortSelectedTestRuns,
             batchEmail: batchEmail,
+            addToSelectedTestRunsAll: addToSelectedTestRunsAll,
             addToSelectedTestRuns: addToSelectedTestRuns,
             deleteSingleTestRun: deleteSingleTestRun,
             showCiHelperDialog: showCiHelperDialog,
@@ -323,9 +326,19 @@
                 if (testRun.selected) {
                     vm.selectedTestRuns[testRun.id] = testRun;
                 } else {
+                    vm.selectedAll = false;
                     delete vm.selectedTestRuns[testRun.id];
                 }
             }, 100);
+        }
+
+        function addToSelectedTestRunsAll() {
+            vm.selectAll = !vm.selectAll;
+            vm.testRuns.forEach(function(testRun) {
+                vm.selectedAll = true;
+                testRun.selected = vm.selectAll;
+                addToSelectedTestRuns(testRun);
+            })
         }
 
         function deleteSingleTestRun(testRun) {
