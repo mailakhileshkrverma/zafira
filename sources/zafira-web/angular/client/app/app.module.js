@@ -24,6 +24,7 @@
         ,'app.common'
         ,'app.testRunCard'
         ,'app.testsRunsFilter'
+        ,'app.appHeader'
         // 3rd party feature modules
         ,'ngImgCrop'
         ,'ngecharts'
@@ -364,14 +365,16 @@
                 };
 
                 $scope.$watch("main.skin",function(newValue,oldValue) {
-                    if(! newValue && !oldValue) {
-                        newValue = $rootScope.main.skin;
-                        oldValue = $rootScope.main.skin;
-                    } else if($rootScope.main) {
-                        $rootScope.main.skin = newValue;
-                        $rootScope.main.isDark = darkThemes.indexOf(newValue) >= 0;
-                        $scope.main.theme = $rootScope.main.isDark ? 'dark' : '';
-                        $scope.main.default = $rootScope.main.isDark ? 'default' : 'default';
+                    if($rootScope.main) {
+                        if(!newValue && !oldValue) {
+                            newValue = $rootScope.main.skin;
+                            oldValue = $rootScope.main.skin;
+                        } else {
+                            $rootScope.main.skin = newValue;
+                            $rootScope.main.isDark = darkThemes.indexOf(newValue) >= 0;
+                            $scope.main.theme = $rootScope.main.isDark ? 'dark' : '';
+                            $scope.main.default = $rootScope.main.isDark ? 'default' : 'default';
+                        }
                     }
                     iElement[0].classList.remove(getTheme(oldValue));
                     addTheme(newValue);
