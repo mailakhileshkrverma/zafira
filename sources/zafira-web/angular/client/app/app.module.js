@@ -25,6 +25,8 @@
         ,'app.testRunCard'
         ,'app.testsRunsFilter'
         ,'app.appHeader'
+        ,'app.appCustomizer'
+        ,'app.appCustomizerColor'
         // 3rd party feature modules
         ,'ngImgCrop'
         ,'ngecharts'
