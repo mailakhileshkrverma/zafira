@@ -27,6 +27,8 @@
         ,'app.appHeader'
         ,'app.appCustomizer'
         ,'app.appCustomizerColor'
+        ,'app.copyright'
+        ,'app.robo'
         // 3rd party feature modules
         ,'ngImgCrop'
         ,'ngecharts'
