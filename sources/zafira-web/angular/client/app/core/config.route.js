@@ -177,18 +177,36 @@
             })
             .state('users/profile', {
                 url: '/users/profile',
-                template: require('../_users/profile.html'),
+                component: 'userComponent',
                 data: {
                     requireLogin: true,
                     classes: 'p-user-profile'
+                },
+                lazyLoad: ($transition$) => {
+                    const $ocLazyLoad = $transition$.injector().get('$ocLazyLoad');
+
+                    return import(/* webpackChunkName: "profile" */ '../_user/user.module.js')
+                        .then(mod => $ocLazyLoad.load(mod.userModule))
+                        .catch(err => {
+                            throw new Error('Can\'t load userModule module, ' + err);
+                        });
                 }
             })
             .state('users', {
                 url: '/users',
-                template: require('../_users/list.html'),
+                component: 'usersComponent',
                 data: {
                     requireLogin: true,
                     classes: 'p-users'
+                },
+                lazyLoad: ($transition$) => {
+                    const $ocLazyLoad = $transition$.injector().get('$ocLazyLoad');
+
+                    return import(/* webpackChunkName: "users" */ '../_users/users.module.js')
+                        .then(mod => $ocLazyLoad.load(mod.usersModule))
+                        .catch(err => {
+                            throw new Error('Can\'t load usersModule module, ' + err);
+                        });
                 }
             })
             // For github redirection
