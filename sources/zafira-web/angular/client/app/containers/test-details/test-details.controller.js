@@ -23,6 +23,7 @@ const testDetailsController = function testDetailsController($scope, $rootScope,
         testGroups: null,
         testGroupMode: 'PLAIN',
         testRun: null,
+        testsLoading: true,
         // mobileBreakpoint: mediaBreakpoints.mobile || 0,
         // windowWidthService: windowWidthService,
         testsTagsOptions: {},
@@ -39,6 +40,9 @@ const testDetailsController = function testDetailsController($scope, $rootScope,
         changeTestStatus: changeTestStatus,
         showDetailsDialog: showDetailsDialog,
         goToTestDetails: goToTestDetails,
+        get empty() {
+            return !Object.keys(vm.testRun.tests || {}).length ;
+        }
     };
 
     vm.$onInit = controlInit;
@@ -118,7 +122,8 @@ const testDetailsController = function testDetailsController($scope, $rootScope,
             showTestsByTags(vm.testRun.tests);
             showTestsByStatuses(vm.testRun.tests);
             vm.testRun.tags = collectTags(vm.testRun.tests);
-        });
+        })
+        .finally(()=>{vm.testsLoading = false});
         vm.subscriptions[vm.testRun.id] = subscribeTestsTopic(vm.testRun.id);
     }
 
@@ -134,7 +139,7 @@ const testDetailsController = function testDetailsController($scope, $rootScope,
         .then(function (rs) {
             if (rs.success) {
                 const data = rs.data.results || [];
-
+                vm.testRun.tests = {};
                 data.forEach(function(test) {
                     addTest(test);
                 });
@@ -169,7 +174,6 @@ const testDetailsController = function testDetailsController($scope, $rootScope,
             return tag.name !== 'TESTRAIL_TESTCASE_UUID' && tag.name !== 'QTEST_TESTCASE_UUID';
         });
 
-        vm.testRun.tests = vm.testRun.tests || {};
         vm.testRun.tests[test.id] = test;
 
         if (vm.testGroupMode === 'PLAIN') {
