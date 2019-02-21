@@ -7,11 +7,9 @@
 
 require('./auth.intercepter');
 require('./utils/HttpMockResolver');
-require('./utils/screenshot.util');
 require('./utils/TableExpandUtil');
 require('./utils/testrun.storage');
 require('./window-width/window-width.service');
-require('./artifact.service');
 require('./auth.service');
 require('./certification.service');
 require('./config.service');

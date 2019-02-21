@@ -1,14 +1,22 @@
 const merge = require('webpack-merge');
 const common = require('./webpack.common.js');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+// const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
 
 module.exports = merge(common, {
+    devtool: false,
     // plugins: [
     //     new ExtractTextPlugin({
     //         filename: `[name]-${version}.css`
     //     })
     // ],
     mode: 'production',
+    // mode: 'none',
+    output: {
+        filename: 'js/[name].build.min.js',
+        chunkFilename: 'js/[name].chunk.min.js'
+    },
     module: {
         rules: [
             // {
@@ -34,5 +42,19 @@ module.exports = merge(common, {
             //     include: [/app\/app\.styl$/]
             // },
         ]
-    }
+    },
+    optimization: {
+        minimize: false,
+        // minimizer: [
+        //     new UglifyJsPlugin(),
+        // ],
+        splitChunks: {
+            // name: false
+        }
+    },
+    plugins: [
+        new CleanWebpackPlugin(['../dist'], {
+            allowExternal: true
+        }),
+    ]
 });

@@ -95,7 +95,7 @@
                             <div align="center center" class="text-center" data-ng-if="widget.data.dataset == 0 && widget.type != 'table'">
                                 <span>No data</span>
                             </div>
-                            <linechart data-ng-if="widget.type == 'linechart' && widget.data.dataset != 0" data="widget.data" options="widget.model"></linechart>
+                            <linechart data-ng-if="widget.type == 'linechart' && widget.data.dataset !== 0" data="widget.data" options="widget.model"></linechart>
                              <div data-ng-if="widget.type == 'piechart'" class="pie-chart">
                                 <pie-chart data="widget.data.dataset" options="widget.model"></pie-chart>
                              </div>

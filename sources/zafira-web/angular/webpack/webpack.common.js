@@ -1,10 +1,10 @@
 const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const CleanWebpackPlugin = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const WebpackStrip = require('webpack-strip'); // TODO: production only
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 module.exports = {
     devtool: 'source-map',
@@ -14,21 +14,17 @@ module.exports = {
     context: path.join(__dirname, '../client/app'),
     entry: {
         vendors: './app.vendors.js',
-        app: './app.module.js',
-        'vendors-styles': '../styles/vendors.scss',
-        'main-styles': '../styles/main.scss',
+        app: './app.module.js'
     },
     output: {
-        // filename: '[name]-' + version + '.js',
-        filename: '[name].build.js',
+        filename: 'js/[name].build.js',
         path: path.join(__dirname, '../dist'),
-        chunkFilename: '[name].lazy-chunk.js'
+        chunkFilename: 'js/[name].chunk.js'
     },
     resolve: {
         modules: [
             path.join(__dirname, '../client/app'),
             path.join(__dirname, '../client/assets'),
-            // path.join(__dirname, '../client/bower_components'),
             path.join(__dirname, '../node_modules')
         ],
         alias: {
@@ -123,24 +119,35 @@ module.exports = {
             [{ from: '../assets', to: 'assets'}]
         ),
         new MiniCssExtractPlugin({
-            filename: '[name].css',
-            chunkFilename: '[id].css'
-        }),
-        new CleanWebpackPlugin(['../dist'], {
-            allowExternal: true
+            filename: 'css/[name].css',
+            chunkFilename: 'css/[name].chunk.css'
         }),
         new HtmlWebpackPlugin({
             template: '../index.html',
             favicon: '../favicon.ico',
-            chunks: ['vendors-styles', 'main-styles', 'vendors', 'app'],
-            chunksSortMode: 'manual',
+            // chunks: ['vendors', 'app'],
+            // chunksSortMode: 'manual',
             showErrors: true
         }),
-        new webpack.ProgressPlugin()
+        new webpack.ProgressPlugin(),
+        // new BundleAnalyzerPlugin(),
     ],
     optimization: {
-        runtimeChunk: {
-            name: 'vendors'
+        runtimeChunk: 'single',
+        namedModules: true,
+        namedChunks: true,
+        splitChunks: {
+            chunks: 'all',
+            cacheGroups: {
+                vendors: false,
+                default: false,
+                common: {
+                    minChunks: 2,
+                    priority: -20,
+                    reuseExistingChunk: true,
+                    name: 'common',
+                }
+            }
         }
     },
     stats: {

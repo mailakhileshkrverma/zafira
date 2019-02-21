@@ -7,7 +7,7 @@ import dashboardEmailModalController from './dashboard-email-modal/dashboard-ema
 
 const dashboardController = function dashboardController($scope, $rootScope, $screenshot, $q, $timeout, $interval, $cookies, $location, $state,
                                  $http, $mdConstant, $stateParams, $mdDialog, $mdToast, UtilService, DashboardService,
-                                 UserService, AuthService, ProjectProvider, $ocLazyLoad) {
+                                 UserService, AuthService, ProjectProvider) {
     'ngInject';
 
     $scope.currentUserId = $location.search().userId;
@@ -147,13 +147,14 @@ const dashboardController = function dashboardController($scope, $rootScope, $sc
 
     function updateWidgetsToAdd () {
         $timeout(function () {
-            if($scope.widgets && $scope.dashboard.widgets)
-            $scope.unexistWidgets =  $scope.widgets.filter(function(widget) {
-                var existingWidget = $scope.dashboard.widgets.filter(function(w) {
-                    return w.id == widget.id;
+            if($scope.widgets && $scope.dashboard.widgets) {
+                $scope.unexistWidgets =  $scope.widgets.filter(function(widget) {
+                    var existingWidget = $scope.dashboard.widgets.filter(function(w) {
+                        return w.id == widget.id;
+                    });
+                    return !existingWidget.length || widget.id != existingWidget[0].id;
                 });
-                return !existingWidget.length || widget.id != existingWidget[0].id;
-            });
+            }
         }, 800);
     };
 
@@ -473,10 +474,23 @@ const dashboardController = function dashboardController($scope, $rootScope, $sc
     var refreshIntervalInterval;
 
     function refresh() {
-        if($scope.dashboard.title && $rootScope.currentUser.refreshInterval && $rootScope.currentUser.refreshInterval != 0) {
+        const currentUser = UserService.getCurrentUser();
+
+        if (currentUser.isAdmin) {
+            DashboardService.GetWidgets().then(function (rs) {
+                if (rs.success) {
+                    $scope.widgets = rs.data;
+                    updateWidgetsToAdd();
+                } else {
+                    alertify.error(rs.message);
+                }
+            });
+        }
+
+        if($scope.dashboard.title && currentUser.refreshInterval && currentUser.refreshInterval !== 0) {
             refreshIntervalInterval = $interval(function () {
                 loadDashboardData($scope.dashboard, true);
-            }, $rootScope.currentUser.refreshInterval);
+            }, currentUser.refreshInterval);
         }
     };
 
@@ -551,21 +565,6 @@ const dashboardController = function dashboardController($scope, $rootScope, $sc
             });
         });
     }
-
-    var defaultDashboardWatcher = $scope.$watch('currentUser.defaultDashboard', function (newVal) {
-        if(newVal) {
-            if ($rootScope.currentUser.isAdmin)
-                DashboardService.GetWidgets().then(function (rs) {
-                    if (rs.success) {
-                        $scope.widgets = rs.data;
-                        updateWidgetsToAdd();
-                    } else {
-                        alertify.error(rs.message);
-                    }
-                });
-            defaultDashboardWatcher();
-        }
-    });
 
     (function init() {
         getDashboardById($stateParams.id).then(function (rs) {

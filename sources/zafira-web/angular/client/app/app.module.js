@@ -1,3 +1,5 @@
+import '../styles/main.scss';
+
 (function () {
     'use strict';
 
@@ -16,15 +18,12 @@
         'app.testsRunsFilter',
         // 3rd party feature modules
         'ngImgCrop',
-        'ngecharts',
         'ui.ace',
-        require('angular-material-data-table'),
-        require('angular-validation-match'),
+        'md.data.table',
+        'validation.match',
         'timer',
-        'n3-line-chart',
-        'n3-pie-chart',
         'ngSanitize',
-        'chieffancypants.loadingBar',
+        'angular-loading-bar',
         'textAngular',
         'ngMaterialDateRangePicker',
         'angular-jwt',
@@ -150,23 +149,12 @@
             link[0].click();
             link.remove();
         };
-        String.prototype.zip = function (objectArray) {
-            var name = this;
-            var zip = new JSZip();
-            var data = zip.folder(name);
-            angular.forEach(objectArray, function (blob, blobName) {
-                data.file(blobName.getValidFilename(), blob, {base64: true});
-            });
-            zip.generateAsync({type:"blob"})
-                .then(function(content) {
-                    content.download(name + '.zip');
-                });
-        };
         String.prototype.getValidFilename = function () {
             return this.replace(/[/\\?%*:|"<>]/g, '-');
         };
     }
-    ]).directive('ngReallyClick', [function() {
+    ])
+    .directive('ngReallyClick', [function() {
         return {
             restrict: 'A',
             link: function(scope, element, attrs) {
@@ -179,7 +167,8 @@
                 });
             }
         }
-    }]).directive('nonautocomplete', function () {
+    }])
+    .directive('nonautocomplete', function () {
         return {
             restrict: 'A',
             link:function($scope, element, attrs) {
@@ -187,7 +176,8 @@
                 angular.element('<input type="password" name="password" class="hide"/>').insertBefore(firstDivElement);
             }
         };
-    }).directive('showMore', ['$location', '$anchorScroll', '$timeout', function(location, anchorScroll, timeout) {
+    })
+    .directive('showMore', ['$location', '$anchorScroll', '$timeout', function(location, anchorScroll, timeout) {
         return {
             restrict: 'AE',
             replace: true,
@@ -245,7 +235,8 @@
                 };
             }
         };
-    }]).directive('showPart', function() {
+    }])
+    .directive('showPart', function() {
         "use strict";
         return {
             restrict: 'E',
@@ -267,7 +258,8 @@
                 }
             }
         };
-    }).directive('codeTextarea', ['$timeout', '$interval', '$rootScope', function ($timeout, $interval, $rootScope) {
+    })
+    .directive('codeTextarea', ['$timeout', '$interval', '$rootScope', function ($timeout, $interval, $rootScope) {
         "use strict";
         return {
             restrict: 'E',
@@ -315,7 +307,8 @@
                 });
             }
         };
-    }]).directive('zafiraBackgroundTheme', ['$rootScope', function ($rootScope) {
+    }])
+    .directive('zafiraBackgroundTheme', ['$rootScope', function ($rootScope) {
         return {
             restrict: 'A',
             link:function($scope, iElement, attrs) {
@@ -370,7 +363,8 @@
                 });
             }
         };
-    }]).directive('sortItem', function () {
+    }])
+    .directive('sortItem', function () {
         "use strict";
         return {
             restrict: 'A',
@@ -399,7 +393,8 @@
                 };
             }
         };
-    }).directive('formErrorValidation', function($q, $timeout, $compile) {
+    })
+    .directive('formErrorValidation', function($q, $timeout, $compile) {
         'ngInject';
         "use strict";
         return {
@@ -433,7 +428,8 @@
                 };
             }
         };
-    }).directive('photoUpload', ['$timeout', '$rootScope', function ($timeout, $rootScope) {
+    })
+    .directive('photoUpload', ['$timeout', '$rootScope', function ($timeout, $rootScope) {
         "use strict";
         return {
             restrict: 'E',
@@ -532,7 +528,8 @@
                 };
             }
         };
-    }]).directive('fieldError', function($q, $timeout, $compile) {
+    }])
+    .directive('fieldError', function($q, $timeout, $compile) {
         'ngInject';
         "use strict";
         return {
@@ -565,7 +562,8 @@
                 })
             }
         };
-    }).directive('profilePhoto', ['$rootScope', function ($rootScope) {
+    })
+    .directive('profilePhoto', ['$rootScope', function ($rootScope) {
         "use strict";
         return {
             restrict: 'E',
@@ -604,7 +602,8 @@
                 }
             }
         };
-    }]).directive('autoHeight', ['$window', function ($window) {
+    }])
+    .directive('autoHeight', ['$window', function ($window) {
         "use strict";
         return {
             restrict: 'A',
@@ -666,7 +665,8 @@
                 }
             }
         };
-    }]).directive('resize', ['$window', function ($window) {
+    }])
+    .directive('resize', ['$window', function ($window) {
         "use strict";
         return {
             restrict: 'A',
@@ -753,7 +753,8 @@
                 };
             }
         };
-    }]).directive('tableLoupe', function () {
+    }])
+    .directive('tableLoupe', function () {
         "use strict";
         return {
             restrict: 'A',
@@ -799,7 +800,8 @@
                 };
             }
         };
-    }).directive('passwordEye', function () {
+    })
+    .directive('passwordEye', function () {
         "use strict";
         return {
             restrict: 'A',
@@ -827,7 +829,8 @@
                 });
             }
         };
-    }).directive('statusButtons', ['$timeout', function ($timeout) {
+    })
+    .directive('statusButtons', ['$timeout', function ($timeout) {
         "use strict";
         return {
             restrict: 'AE',
@@ -915,7 +918,8 @@
                 });
             }
         };
-    }]).directive('chipsArray', ['$timeout', function ($timeout) {
+    }])
+    .directive('chipsArray', ['$timeout', function ($timeout) {
         "use strict";
         return {
             restrict: 'E',
@@ -1118,7 +1122,8 @@
             }
             return items
         };
-    }]).filter('isEmpty', [function() {
+    }])
+    .filter('isEmpty', [function() {
 	  return function(object) {
 	    return angular.equals({}, object);
 	  }

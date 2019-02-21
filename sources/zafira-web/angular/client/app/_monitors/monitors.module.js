@@ -1,4 +1,4 @@
-import angular from 'angular';
+// import angular from 'angular';
 import monitorsComponent from './monitors.component';
 import MonitorsService from './monitor.service';
 

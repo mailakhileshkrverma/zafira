@@ -1,3 +1,5 @@
+const JSZip = require('jszip');
+
 const testRunInfoController = function testRunInfoController($scope, $rootScope, $http, $mdDialog, $interval, $log, $filter,
                                    $anchorScroll, $location, $timeout, $window, $q,
                                    elasticsearchService, TestService, TestRunService, UtilService,
@@ -433,13 +435,26 @@ const testRunInfoController = function testRunInfoController($scope, $rootScope,
                     result[thumb.log + '.png'] = rs.res.data;
                 }
                 attempts --;
-                if(attempts == 0) {
-                    var name = $scope.test.id + '. ' + $scope.test.name;
-                    name.zip(result);
+                if (attempts === 0) {
+                    const name = $scope.test.id + '. ' + $scope.test.name;
+
+                    downloadZipFile(name, result);
                 }
             });
         })
     };
+
+    function downloadZipFile(name, data) {
+        const zip = new JSZip();
+        const folder = zip.folder(name);
+
+        angular.forEach(data, function (blob, blobName) {
+            folder.file(blobName.getValidFilename(), blob, {base64: true});
+        });
+        zip.generateAsync({type:"blob"}).then(function(content) {
+            content.download(name + '.zip');
+        });
+    }
 
     $scope.showGalleryDialog = function (event, url) {
         $mdDialog.show({

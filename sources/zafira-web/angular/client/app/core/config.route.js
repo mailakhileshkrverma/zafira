@@ -160,7 +160,7 @@
             })
             .state('resetPassword', {
                 url: '/password/reset',
-                template: require('../_auth/reset-password.html'),
+                component: 'resetPasswordComponent',
                 data: {
                     onlyGuests: true,
                     classes: 'body-wide body-auth'
