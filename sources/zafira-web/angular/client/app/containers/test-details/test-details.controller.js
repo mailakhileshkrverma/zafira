@@ -205,6 +205,9 @@
 
                 return !name.includes('live') && !name.includes('video');
             });
+            test.artifactsToShow.forEach(function (artifact) {
+                artifact.extension = artifact.link.split('.').pop().split('?')[0];
+            });
             test.tags = test.tags.filter(function (tag) {
                 return tag.name !== 'TESTRAIL_TESTCASE_UUID' && tag.name !== 'QTEST_TESTCASE_UUID';
             });

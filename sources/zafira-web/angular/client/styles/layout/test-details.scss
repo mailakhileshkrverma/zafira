@@ -236,6 +236,12 @@
                     }
                 }
                 &-settings {
+                    .divider {
+                        width: 28px;
+                        height: 2px;
+                        background-color: #c9d6ca;
+                        transform: rotate(-90deg);
+                    }
                     @media(max-width: $breakpoint-mobile) {
                         flex-grow: 1;
                     }
