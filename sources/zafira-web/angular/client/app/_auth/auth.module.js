@@ -1,4 +1,3 @@
-// import angular from 'angular';
 import signupComponent from './signup.component';
 import signinComponent from './signin.component';
 import forgotPasswordComponent from './forgot-password.component';

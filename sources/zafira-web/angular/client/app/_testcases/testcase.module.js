@@ -1,4 +1,3 @@
-// import angular from 'angular';
 import testcaseComponent from './testcase.component';
 import testcaseMetricsComponent from './testcase-metrics.component';
 

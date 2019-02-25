@@ -11,7 +11,7 @@
                      'bg-warning': ['15','25','35'].indexOf($ctrl.mainData) >= 0,
                      'bg-danger': ['16','26','36'].indexOf($ctrl.mainData) >= 0 }">
             <a href="#!/">
-                <span class="logo-icon"><img src="assets/images/zafira_white_logo.svg" /></span>
+                <span class="logo-icon"><img src="../../../../assets/images/zafira_white_logo.svg" /></span>
             </a>
         </div>
 
@@ -19,12 +19,12 @@
             <ul class="nav-right pull-right list-unstyled">
                 <li>
                     <div class="profile-img hide-phone" style="display: inline-block;">
-                        <profile-photo id="brandPhoto" ng-model="$ctrl.companyLogo.value" size="40" src="assets/images/project_photo.svg"
+                        <profile-photo id="brandPhoto" ng-model="$ctrl.companyLogo.value" size="40" src="../../../../assets/images/project_photo.svg"
                             icon-visible="$ctrl.currentUser.isAdmin"></profile-photo>
                         <div class="profile-img-content-wrapper" has-any-role="['ROLE_ADMIN']">
                             <div class="profile-img-content">
                                 <span>
-                                    <md-icon md-svg-src="assets/images/project_circle_add.svg" ng-click="showUploadImageDialog($event)"
+                                    <md-icon md-svg-src="../../../../assets/images/project_circle_add.svg" ng-click="showUploadImageDialog($event)"
                                         style="height: 36px; width: 36px;"></md-icon>
                                 </span>
                             </div>
@@ -36,7 +36,7 @@
                             <small class="hide-phone" data-ng-if="!selectedProjectsPresent()">Projects</small>
                             <i class="material-icons hide-phone">arrow_drop_down</i>
                             <div class="profile-img show-phone" style="display: inline-block;">
-                                <profile-photo id="brandPhotoPhone" ng-model="companyLogo.value" size="40" src="assets/images/project_photo.svg"
+                                <profile-photo id="brandPhotoPhone" ng-model="companyLogo.value" size="40" src="../../../../assets/images/project_photo.svg"
                                     icon-visible="currentUser.isAdmin"></profile-photo>
                             </div>
                         </md-button>

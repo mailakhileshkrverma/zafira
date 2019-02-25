@@ -1,4 +1,3 @@
-// import angular from 'angular';
 import testRunInfoComponent from './test-run-info.component';
 import elasticsearchService from './elasticsearch.service';
 import ArtifactService from './artifact.service';
