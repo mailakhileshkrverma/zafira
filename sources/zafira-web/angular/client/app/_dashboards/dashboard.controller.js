@@ -474,7 +474,7 @@ const dashboardController = function dashboardController($scope, $rootScope, $q,
     var refreshIntervalInterval;
 
     function refresh() {
-        const currentUser = UserService.getCurrentUser();
+        const currentUser = UserService.currentUser;
 
         if (currentUser.isAdmin) {
             DashboardService.GetWidgets().then(function (rs) {

@@ -12,7 +12,7 @@
                 'ngInject';
 
                 const local = {
-                    currentUser: UserService.getCurrentUser(),
+                    currentUser: UserService.currentUser,
                     testRunInDebugMode: null,
                     stopConnectingDebug: null,
                     debugHost: null,

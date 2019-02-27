@@ -67,7 +67,7 @@
                 showTemplate: false,
                 fullscreen: false
             },
-            currentUser: UserService.getCurrentUser(),
+            currentUser: UserService.currentUser,
             chipsCtrl: null,
             isMobile: windowWidthService.isMobile,
             isMobileSearchActive: false,

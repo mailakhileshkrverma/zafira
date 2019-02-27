@@ -69,8 +69,8 @@
                                                 <label>Email</label>
                                                 <input id="userEmail" type="email" ng-model="user.email" name="email" ng-pattern="/^.+@.+\..+$/" disabled>
                                                 <div ng-messages="profile_form.email.$error" ng-if="profile_form.email.$dirty">
-		                                            <div ng-message="required" data-translate="VLD_REQUIRED"></div>
-		                                            <div ng-message="pattern" data-translate="VLD_PATTERN"></div>
+		                                            <div ng-message="required">Required</div>
+		                                            <div ng-message="pattern">Invalid format</div>
 		                                        </div>
                                             </md-input-container>
                                         </div>

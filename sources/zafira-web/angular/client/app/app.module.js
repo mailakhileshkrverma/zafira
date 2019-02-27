@@ -566,12 +566,7 @@ import '../styles/main.scss';
         "use strict";
         return {
             restrict: 'E',
-            template: '<span>' +
-            '            <img alt="avatar" ng-src="{{ngModel}}" ng-class="{\'imageRotateHorizontal\': rotateHorizontal}" class="img-circle profile-hovered" ng-if="ngModel && ngModel.length && ngModel.split(\'?\')[0]" style="width: {{imageSize}}px">' +
-            '            <i class="material-icons profile-hovered" style="font-size: {{size}}px; vertical-align: middle; color: #777777" ng-if="icon && iconVisible && !(ngModel && ngModel.length && ngModel.split(\'?\')[0])">{{icon}}</i>' +
-            '            <md-icon class="profile-hovered profile-hovered-full" ng-if="src && !icon && iconVisible && !(ngModel && ngModel.length && ngModel.split(\'?\')[0])" md-svg-src="{{src}}" aria-label="icon" style="width: {{imageSize}}px; height: {{imageSize}}px; color: white;"></md-icon>' +
-            '            <md-tooltip ng-if="label" md-direction="right">{{ label }}</md-tooltip>' +
-            '          </span>',
+            template: require('./shared/profile-photo.directive.html'),
             require: 'ngModel',
             replace: true,
             transclude: true,
@@ -1144,7 +1139,7 @@ import '../styles/main.scss';
                     var loginRequired = !!(toState.data && toState.data.requireLogin);
                     var onlyGuests = !!(toState.data && toState.data.onlyGuests);
                     var isAuthorized = AuthService.isAuthorized();
-                    var currentUser = UserService.getCurrentUser();
+                    var currentUser = UserService.currentUser;
 
                     //Redirect to login page if authorization is required and user is not authorized
                     if (loginRequired && !isAuthorized) {

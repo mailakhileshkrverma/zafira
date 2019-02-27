@@ -174,7 +174,7 @@
 
                     $scope.initSession();
 
-                    currentUser = UserService.getCurrentUser();
+                    currentUser = UserService.currentUser;
                     if (!currentUser) {
                         UserService.initCurrentUser()
                             .then(function (user) {

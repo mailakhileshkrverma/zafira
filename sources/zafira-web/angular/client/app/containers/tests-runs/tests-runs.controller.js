@@ -254,7 +254,7 @@ const testsRunsController = function testsRunsController($cookieStore, $mdDialog
             TestRunService.abortCIJob(testRun.id, testRun.ciRunId).then(function (rs) {
                 if (rs.success) {
                     const abortCause = {};
-                    const currentUser = UserService.getCurrentUser();
+                    const currentUser = UserService.currentUser;
 
                     abortCause.comment = 'Aborted by ' + currentUser.username;
                     TestRunService.abortTestRun(testRun.id, testRun.ciRunId, abortCause).then(function(rs) {

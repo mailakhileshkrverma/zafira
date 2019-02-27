@@ -34,7 +34,7 @@
           data-ng-controller="AppCtrl"
           data-ng-class=" { 'layout-boxed': main.layout === 'boxed',
                             'nav-collapsed-min': main.isMenuCollapsed,
-                            'dark-container zaf-dark': darkThemes.indexOf(main.skin) != -1,
+                            'dark-container zaf-dark': darkThemes.indexOf(main.skin) !== -1,
                              'bg-page-grey zaf-light': darkThemes.indexOf(main.skin) === -1
           } " md-theme="{{ main.default }}" md-theme-watch>
     <!--[if lt IE 9]>

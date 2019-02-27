@@ -8,8 +8,8 @@
 
         return {
             mainData: {},
-            companyLogo: $rootScope.companyLogo,
-            currentUser: UserService.getCurrentUser()
+            get companyLogo() { return $rootScope.companyLogo; },
+            get currentUser() { return UserService.currentUser; },
         };
 
     });

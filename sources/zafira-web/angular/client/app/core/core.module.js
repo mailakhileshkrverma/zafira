@@ -10,10 +10,9 @@
 
         // Custom modules
         ,'app.layout'
-        ,'app.i18n'
+        // ,'app.i18n'
         
         // 3rd Party Modules
-        ,'oc.lazyLoad'
         ,'ngMaterial'
         ,'ui.router'
         ,'duScroll'
@@ -22,7 +21,7 @@
 
     require('./app.config');
     require('./app.controller');
-    require('./config.lazyload');
+    // require('./config.lazyload');
     require('./config.route');
-    require('./i18n');
+    // require('./i18n');
 })();

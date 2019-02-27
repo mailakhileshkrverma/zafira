@@ -19,7 +19,7 @@
                     currentUser: ($stateParams, $q, UserService, $state) => {
                         'ngInject';
 
-                        const currentUser = UserService.getCurrentUser();
+                        const currentUser = UserService.currentUser;
 
                         if (!currentUser) {
                             return UserService.initCurrentUser()
@@ -62,7 +62,7 @@
                     currentUser: ($stateParams, $q, UserService, $state) => {
                         'ngInject';
 
-                        const currentUser = UserService.getCurrentUser();
+                        const currentUser = UserService.currentUser;
 
                         if (!currentUser) {
                             return UserService.initCurrentUser()
