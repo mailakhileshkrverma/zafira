@@ -63,7 +63,15 @@
                         });
                     }
                 });
-	        };
+            };
+            
+            $scope.$on('$mdMenuOpen', function() { 
+                $('.app').addClass('md-menu-is-open');
+            
+            });
+            $scope.$on('$mdMenuClose', function() { 
+                $('.app').removeClass('md-menu-is-open');                
+            });
 
 	        $rootScope.$on('event:settings-toolsInitialized', function (event, data) {
 
